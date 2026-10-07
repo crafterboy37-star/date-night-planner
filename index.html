@@ -1,26 +1,221 @@
-/* ---------- neutral colours, sunshine icon, welcome ---------- */
-{
-  const s=document.createElement('style');
-  s.textContent=`:root{--bg:#f4f1ec;--card:#fffdfa;--ink:#2a2622;--soft:rgba(60,54,48,.66);--line:rgba(60,54,48,.16);--fill:rgba(120,110,98,.13);--tint:#b5722a;--glass:rgba(255,253,250,.78)}
-@media (prefers-color-scheme:dark){:root{--bg:#1e1c1a;--card:#2a2725;--ink:#f3efe9;--soft:rgba(240,234,226,.64);--line:rgba(240,234,226,.14);--fill:rgba(150,140,128,.2);--tint:#c07f35;--glass:rgba(48,45,42,.78)}}
-.rate,.starrow button{color:var(--tint)}`;
-  document.head.appendChild(s);
-  $$('meta[name=theme-color]').forEach((m,i)=>m.content=i?'#1e1c1a':'#f4f1ec');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Date Night">
+<meta name="theme-color" content="#f4f1ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1e1c1a" media="(prefers-color-scheme: dark)">
+<title>Date Night</title>
+<style>
+:root{color-scheme:light dark;--bg:#f4f1ec;--card:#fffdfa;--ink:#2a2622;--soft:rgba(60,54,48,.66);
+  --line:rgba(60,54,48,.16);--fill:rgba(120,110,98,.13);--tint:#b5722a;--on:#fff;--glass:rgba(255,253,250,.78)}
+@media (prefers-color-scheme:dark){:root{--bg:#1e1c1a;--card:#2a2725;--ink:#f3efe9;--soft:rgba(240,234,226,.64);
+  --line:rgba(240,234,226,.14);--fill:rgba(150,140,128,.2);--tint:#e2a75a;--on:#221f1c;--glass:rgba(48,45,42,.78)}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0 auto;max-width:520px;background:var(--bg);color:var(--ink);
+  font:17px/1.35 -apple-system,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;
+  padding:calc(env(safe-area-inset-top) + 26px) 16px calc(env(safe-area-inset-bottom) + 120px)}
+h1{font-size:31px;font-weight:700;line-height:1.12;margin:0 4px 4px}
+h2{font-size:20px;font-weight:700;margin:28px 4px 10px}
+.hello{font-size:16px;font-weight:600;color:var(--tint);margin:0 4px 4px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.gear{flex:none;margin-top:2px}
+.gear svg{width:26px;height:26px;fill:none;stroke:var(--tint);stroke-width:1.9;stroke-linecap:round}
+.sub{color:var(--soft);font-size:15px;margin:0 4px 18px}
+.foot{color:var(--soft);font-size:13px;margin:8px 16px 0}
+input,textarea,button{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+button:active,.btn:active{opacity:.6}
+button:focus-visible,a:focus-visible{outline:3px solid var(--tint);outline-offset:2px}
+.box{display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:12px;padding:0 12px;min-height:46px;margin-top:8px}
+.box svg{flex:none;width:18px;height:18px;stroke:var(--soft);fill:none;stroke-width:2;stroke-linecap:round}
+.box input{flex:1;min-width:0;border:0;background:none;outline:0;padding:11px 0}
+.box:focus-within{box-shadow:0 0 0 2px var(--tint)}
+.link{color:var(--tint);font-weight:600;font-size:16px;white-space:nowrap;padding:8px 0}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:8px 15px;border-radius:99px;background:var(--card);font-size:15px;font-weight:500}
+.chip[aria-pressed=true]{background:var(--tint);color:var(--on)}
+.btn{display:block;width:100%;min-height:50px;line-height:50px;border-radius:14px;background:var(--tint);color:var(--on);
+  font-weight:600;text-align:center;text-decoration:none;margin-top:12px}
+.btn.gray{background:var(--fill);color:var(--tint)}
+.btn.small{display:inline-block;width:auto;min-height:36px;line-height:36px;padding:0 15px;border-radius:99px;font-size:15px;margin:0}
+.two{display:flex;gap:10px}.two .btn{flex:1}
+.rowb{display:flex;gap:8px;flex-wrap:wrap}
+.status{color:var(--soft);font-size:15px;margin:14px 4px 4px}
+.res{background:var(--card);border-radius:16px;padding:10px;margin-top:8px}
+.resmain{display:flex;gap:12px;align-items:center;width:100%;text-align:left}
+.resmain img{flex:none;width:78px;height:78px;border-radius:11px;object-fit:cover;background:var(--fill)}
+.info{display:block;min-width:0;padding:2px 4px}
+.info b{display:block;font-weight:600;line-height:1.2;margin-bottom:3px}
+.m{display:block;font-size:14px;color:var(--soft);line-height:1.35}
+.rate{color:var(--tint);font-weight:600}
+.acts{display:flex;justify-content:space-between;gap:10px;padding:10px 4px 2px;margin-top:8px;border-top:.5px solid var(--line)}
+.acts a,.acts button,.m a{color:var(--tint);font-weight:600;font-size:14px;text-decoration:none}
+.group{background:var(--card);border-radius:14px;overflow:hidden}
+.field{display:flex;align-items:center;gap:12px;padding:0 16px;min-height:50px;position:relative}
+.field+.field::before{content:"";position:absolute;left:16px;right:0;top:0;border-top:.5px solid var(--line)}
+.field label{flex:none;width:104px}
+.field input{flex:1;min-width:0;border:0;background:none;outline:0;padding:14px 0}
+.field input[type=time]{flex:none;margin-left:auto;color:var(--tint)}
+.field:focus-within label{color:var(--tint)}
+textarea{display:block;width:100%;min-height:170px;border:0;outline:0;background:var(--card);border-radius:14px;padding:14px 16px;resize:vertical}
+textarea.short{min-height:92px}
+textarea:focus{box-shadow:0 0 0 2px var(--tint)}
+details{margin-top:14px}
+summary{color:var(--tint);font-weight:600;font-size:16px;padding:6px 4px 10px;list-style:none}
+summary::-webkit-details-marker{display:none}
+.seg{display:flex;background:var(--fill);border-radius:11px;padding:2px;margin-bottom:10px}
+.seg button{flex:1;padding:7px 4px;border-radius:9px;font-size:15px;font-weight:600}
+.seg small{display:block;font-weight:400;font-size:12px;color:var(--soft)}
+.seg button[aria-pressed=true]{background:var(--card);box-shadow:0 2px 6px rgba(0,0,0,.14)}
+.headrow{display:flex;justify-content:space-between;align-items:baseline}
+.pass{background:var(--card);border-radius:22px;overflow:hidden;margin-top:18px;box-shadow:0 10px 30px rgba(40,30,20,.14)}
+.pass>img{display:block;width:100%;height:180px;object-fit:cover;background:var(--fill)}
+.pass-body{padding:14px 18px 12px}
+.pass-body+.pass-body{border-top:.5px solid var(--line)}
+.pass-name{font-size:23px;font-weight:700;line-height:1.15;margin:0 0 5px}
+.pass-when{padding:14px 18px;border-top:.5px solid var(--line);font-weight:600}
+.nudge{background:var(--tint);color:var(--on);border-radius:18px;padding:16px;margin-bottom:22px;font-weight:500}
+.nudge .btn{background:var(--on);color:var(--tint)}
+.plan{background:var(--card);border-radius:16px;padding:14px 16px;margin-top:10px}
+.plan>img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;margin-bottom:12px;background:var(--fill)}
+.plan b{display:block;font-weight:600;margin:2px 0}
+.plan p{margin:2px 0 12px;color:var(--soft);font-size:14px}
+.plan .quote{color:var(--ink);font-size:16px}
+#sheet{position:fixed;inset:0;z-index:5;background:rgba(20,16,12,.45);display:flex;align-items:flex-end}
+.sheet-card{background:var(--bg);width:100%;max-width:520px;margin:0 auto;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;
+  padding:22px 16px calc(env(safe-area-inset-bottom) + 22px)}
+.prev{display:block;width:100%;border-radius:14px;max-height:260px;object-fit:cover}
+.starrow{display:flex;align-items:center;gap:2px;min-height:48px}
+.starrow span{width:74px}
+.starrow button{font-size:30px;line-height:1;color:var(--tint);padding:4px}
+.big{font-size:60px;font-weight:800;line-height:1;margin:0 4px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;background:var(--fill)}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 12px);display:flex;gap:2px;padding:5px;
+  border-radius:99px;background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+  box-shadow:0 8px 28px rgba(40,30,20,.18),inset 0 0 0 .5px var(--line)}
+nav button{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:76px;padding:7px 8px 6px;border-radius:99px;
+  font-size:11px;font-weight:600;color:var(--soft)}
+nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+nav button[aria-current=page]{color:var(--tint);background:var(--fill)}
+#toast{position:fixed;z-index:9;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 100px);background:var(--glass);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 6px 22px rgba(40,30,20,.2);
+  padding:11px 18px;border-radius:99px;font-size:15px;font-weight:500;max-width:88%;text-align:center}
+</style>
+</head>
+<body>
 
-  $$('link[rel=apple-touch-icon]').forEach(l=>l.remove());
-  const c=document.createElement('canvas'); c.width=c.height=180; const x=c.getContext('2d');
-  const g=x.createLinearGradient(0,0,0,180); g.addColorStop(0,'#fbf3e2'); g.addColorStop(1,'#efdcb8');
-  x.fillStyle=g; x.fillRect(0,0,180,180); x.font='112px -apple-system, sans-serif';
-  x.textAlign='center'; x.textBaseline='middle'; x.fillText('☀️',90,98);
-  const l=document.createElement('link'); l.rel='apple-touch-icon'; l.href=c.toDataURL(); document.head.appendChild(l);
+<main id="v-plan">
+  <div id="nudge" class="nudge" hidden></div>
+  <p class="hello" id="hello"></p>
+  <div class="top"><h1 id="title">Date nights</h1>
+    <button class="gear" data-tab="settings" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M4 7h8M18 7h2M4 17h2M12 17h8"/><circle cx="15" cy="7" r="2.5"/><circle cx="9" cy="17" r="2.5"/></svg></button></div>
+  <p class="sub" id="countdown"></p>
 
-  const h1=document.querySelector('#v-plan h1');
-  if(h1){
-    const hr=new Date().getHours(), hello=document.createElement('p');
-    hello.textContent=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
-    hello.style.cssText='font-size:16px;font-weight:600;color:var(--tint);margin:0 4px 4px';
-    const row=h1.closest('.top')||h1; row.parentNode.insertBefore(hello,row);
-    h1.style.fontSize='30px'; h1.style.lineHeight='1.12';
-    h1.textContent='Date nights with '+(settings.her||'Jessica');
-  }
-}
+  <div class="chips" id="chips"></div>
+  <div class="box">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <input id="q" placeholder="Italian, rooftop, mini golf" aria-label="What do you feel like?" enterkeyhint="search">
+  </div>
+  <div class="box">
+    <svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+    <input id="area" placeholder="Suburb or city" aria-label="Where?" enterkeyhint="search">
+    <button class="link" id="nearme">Near me</button>
+  </div>
+  <div class="two"><button class="btn" id="go">Search</button><button class="btn gray" id="surprise">Surprise me</button></div>
+  <div class="two" id="surpriseOpts" hidden>
+    <button class="btn gray" id="surWish">From my wishlist</button><button class="btn gray" id="surAny">Anything nearby</button></div>
+  <p class="status" id="status" aria-live="polite"></p>
+  <div id="list"></div>
+  <button class="btn gray" id="more" hidden>Show more</button>
+  <p class="foot" id="src"></p>
+
+  <details>
+    <summary>Can't find it? Add the place yourself</summary>
+    <div class="group">
+      <div class="field"><label for="mname">Name</label><input id="mname" placeholder="Place or activity"></div>
+      <div class="field"><label for="maddr">Address</label><input id="maddr" placeholder="Optional"></div>
+    </div>
+    <button class="btn gray" id="madd">Use this place</button>
+  </details>
+
+  <section id="step2" hidden>
+    <div class="pass" id="pass"></div>
+    <button class="btn gray" id="addstop">Add a second stop</button>
+
+    <div id="movieGroup" hidden>
+      <h2>The movie</h2>
+      <div class="group"><div class="field"><label for="movie">Movie</label><input id="movie" placeholder="What are you seeing?"></div></div>
+      <a class="btn gray" id="sessions" target="_blank" rel="noopener">See session times</a>
+    </div>
+
+    <h2>When</h2>
+    <div class="seg" id="sun"></div>
+    <div class="group">
+      <div class="field"><label for="time">Time</label><input type="time" id="time" value="18:30"></div>
+      <div class="field" id="t2row" hidden><label for="time2">Second stop</label><input type="time" id="time2"></div>
+      <div class="field"><label for="note">Note</label><input id="note" placeholder="Dress nice, bring a jacket"></div>
+    </div>
+    <p class="foot" id="wx"></p>
+
+    <div class="headrow"><h2>Your message</h2><button class="link" data-act="shuffle">Shuffle wording</button></div>
+    <textarea id="msg" aria-label="Message to send"></textarea>
+    <button class="btn" id="sendnow">Text it to her now</button>
+    <button class="btn gray" id="savelater">Save and send later</button>
+    <button class="btn gray" id="cal">Add reminders to Calendar</button>
+    <p class="foot">Calendar gets the date on Sunday and a Wednesday 6pm reminder to send the message.</p>
+  </section>
+</main>
+
+<main id="v-wish" hidden>
+  <h1>Wishlist</h1>
+  <p class="sub">Places you want to take her.</p>
+  <div id="wishlist"></div>
+</main>
+
+<main id="v-dates" hidden>
+  <h1>Your Dates</h1>
+  <p class="sub">What's coming up, and everywhere you've been.</p>
+  <div id="plans"></div>
+</main>
+
+<main id="v-her" hidden>
+  <h1 id="herTitle">Her Favourites</h1>
+  <p class="sub">Little things worth remembering. Saves as you type.</p>
+  <h2>Loves</h2><textarea class="short" data-fav="loves" placeholder="Foods, flowers, things that make her smile"></textarea>
+  <h2>Not a fan of</h2><textarea class="short" data-fav="hates" placeholder="Foods and places to avoid"></textarea>
+  <h2>Allergies</h2><textarea class="short" data-fav="allergies" placeholder="Anything to tell the restaurant"></textarea>
+  <h2>Places she's mentioned</h2><textarea class="short" data-fav="mentioned" placeholder="That bar she saw online"></textarea>
+</main>
+
+<main id="v-settings" hidden>
+  <h1>Settings</h1>
+  <p class="sub">Everything here stays on this phone.</p>
+  <div class="group">
+    <div class="field"><label for="s-her">Her name</label><input id="s-her" autocomplete="off"></div>
+    <div class="field"><label for="s-phone">Her mobile</label><input id="s-phone" type="tel" placeholder="0412 345 678"></div>
+    <div class="field"><label for="s-area">Usual area</label><input id="s-area" placeholder="New Farm, Brisbane"></div>
+    <div class="field"><label for="s-key">Google key</label><input id="s-key" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Optional"></div>
+  </div>
+  <button class="btn" id="s-save">Save settings</button>
+  <h2>Backup</h2>
+  <button class="btn gray" data-act="backup">Back up everything</button>
+  <label class="btn gray">Restore from a backup<input type="file" id="restoreFile" hidden></label>
+  <p class="foot">A backup holds your dates, scrapbook photos, wishlist and her favourites in one file. Save it to Files or iCloud Drive.</p>
+</main>
+
+<nav>
+  <button data-tab="plan" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Plan</button>
+  <button data-tab="wish"><svg viewBox="0 0 24 24"><path d="M7 4h10v16l-5-4-5 4z"/></svg>Wishlist</button>
+  <button data-tab="dates"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>Dates</button>
+  <button data-tab="her"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Her</button>
+</nav>
+<div id="sheet" hidden><div class="sheet-card" id="sheetBody"></div></div>
+<div id="toast" hidden></div>
