@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Date Night">
+<meta name="theme-color" content="#ece8f3">
+<title>Date Night</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ece8f3;--ink:#2b1b3d;--soft:#6d5f80;--card:#fff;--line:#d6cde4;--rose:#d63a72;--gold:#f6c453}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0 auto;max-width:520px;background:var(--bg);color:var(--ink);
+  font:16px/1.45 -apple-system,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;
+  padding:calc(env(safe-area-inset-top) + 22px) 18px calc(env(safe-area-inset-bottom) + 96px)}
+h1,h2,.tk-name,.tk-when{font-family:"Bricolage Grotesque",-apple-system,system-ui,sans-serif}
+h1{font-size:36px;line-height:1.02;letter-spacing:-.02em;font-weight:800;margin:0 0 6px}
+h2{font-size:21px;font-weight:700;margin:30px 0 10px}
+.sub{color:var(--soft);margin:0 0 18px}
+label{display:block;font-size:14px;color:var(--soft);margin:12px 0 5px}
+input,textarea,button{font:inherit;color:inherit}
+input,textarea{width:100%;min-height:50px;padding:13px 14px;border:1.5px solid var(--line);
+  border-radius:12px;background:var(--card);-webkit-appearance:none;appearance:none}
+textarea{min-height:190px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:3px solid rgba(214,58,114,.4);outline-offset:1px}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+button{cursor:pointer;border:0;background:none}
+.btn{width:100%;min-height:52px;border-radius:14px;background:var(--ink);color:#fff;font-weight:600;margin-top:12px}
+.btn.rose{background:var(--rose)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.small{width:auto;min-height:40px;padding:0 14px;margin:0;font-size:15px}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:0 -18px 12px;padding:2px 18px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:9px 15px;border-radius:99px;background:var(--card);border:1.5px solid var(--line);font-size:15px}
+.chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.status{color:var(--soft);font-size:15px;margin:12px 2px}
+.res{display:block;width:100%;text-align:left;background:var(--card);border-radius:14px;padding:13px 15px;margin-top:8px}
+.res b{display:block;font-size:17px}
+.res span{color:var(--soft);font-size:14px}
+details{margin-top:16px}
+summary{color:var(--rose);font-weight:600;padding:6px 0}
+.ticket{--cut:calc(100% - 66px);background:var(--gold);border-radius:18px;padding:20px 22px 0;margin-top:16px;
+  -webkit-mask:radial-gradient(circle 11px at 0 var(--cut),#0000 97%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 11px at 100% var(--cut),#0000 97%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 11px at 0 var(--cut),#0000 97%,#000) left/51% 100% no-repeat,
+               radial-gradient(circle 11px at 100% var(--cut),#0000 97%,#000) right/51% 100% no-repeat}
+.tk-name{font-size:27px;line-height:1.08;font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
+.tk-meta{font-size:15px;margin:0 0 4px;opacity:.8}
+.ticket a{color:var(--ink);font-size:15px;font-weight:600}
+.tk-stub{height:66px;margin:16px -22px 0;padding:0 22px;border-top:2px dashed rgba(43,27,61,.4);
+  display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tk-when{font-weight:700;font-size:17px}
+.tk-two{font-size:14px;opacity:.75;white-space:nowrap}
+.nudge{background:var(--rose);color:#fff;border-radius:16px;padding:15px 16px;margin-bottom:20px}
+.nudge .btn{background:#fff;color:var(--rose);margin-top:10px}
+.plan{background:var(--card);border-radius:14px;padding:14px 15px;margin-top:10px}
+.plan b{font-size:17px}
+.plan p{margin:2px 0 10px;color:var(--soft);font-size:14px}
+.plan .row{gap:8px}
+.plan .btn.small{flex:none}
+.tip{font-size:14px;color:var(--soft);margin-top:12px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(255,255,255,.92);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+  padding:8px 12px calc(env(safe-area-inset-bottom) + 8px)}
+nav button{flex:1;min-height:46px;border-radius:12px;color:var(--soft);font-weight:600}
+nav button[aria-current=page]{color:var(--ink);background:var(--bg)}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 86px);transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:11px 18px;border-radius:99px;font-size:15px;max-width:88%;text-align:center}
+</style>
+</head>
+<body>
+
+<main id="v-plan">
+  <div id="nudge" class="nudge" hidden></div>
+  <h1>Plan date night</h1>
+  <p class="sub">Find a spot, set the time, text her the plan.</p>
+
+  <div class="chips" id="chips"></div>
+  <label for="q">What do you feel like?</label>
+  <input id="q" placeholder="Italian, rooftop, mini golf" enterkeyhint="search">
+  <label for="area">Where?</label>
+  <div class="row">
+    <input id="area" placeholder="Suburb or city" enterkeyhint="search">
+    <button class="btn ghost small" id="nearme" style="flex:none;min-height:50px">Near me</button>
+  </div>
+  <button class="btn" id="go">Search places</button>
+  <p class="status" id="status" aria-live="polite"></p>
+  <div id="list"></div>
+
+  <details>
+    <summary>Can't find it? Add the place yourself</summary>
+    <label for="mname">Place name</label><input id="mname">
+    <label for="maddr">Address</label><input id="maddr">
+    <button class="btn ghost" id="madd">Use this place</button>
+  </details>
+
+  <section id="step2" hidden>
+    <h2>When?</h2>
+    <div class="row">
+      <div><label for="date">Day</label><input type="date" id="date"></div>
+      <div><label for="time">Time</label><input type="time" id="time" value="18:30"></div>
+    </div>
+    <label for="note">Anything she should know? (optional)</label>
+    <input id="note" placeholder="Dress nice, bring a jacket">
+
+    <div class="ticket" id="ticket"></div>
+
+    <h2>Your message</h2>
+    <textarea id="msg" aria-label="Message to send"></textarea>
+    <button class="btn rose" id="sendnow">Text it to her now</button>
+    <button class="btn ghost" id="savelater">Save and send later</button>
+    <p class="tip">To schedule it for Wednesday: tap "Text it to her now", then in Messages tap the + next to the text box and choose Send Later.</p>
+  </section>
+</main>
+
+<main id="v-dates" hidden>
+  <h1>Your dates</h1>
+  <p class="sub">Plans you've saved or sent.</p>
+  <div id="plans"></div>
+</main>
+
+<main id="v-settings" hidden>
+  <h1>Settings</h1>
+  <p class="sub">Saved on this phone only.</p>
+  <label for="s-her">Her name</label><input id="s-her" autocomplete="off">
+  <label for="s-phone">Her mobile number</label><input id="s-phone" type="tel" placeholder="0412 345 678">
+  <label for="s-area">Where you usually go out</label><input id="s-area" placeholder="New Farm, Brisbane">
+  <button class="btn" id="s-save">Save settings</button>
+</main>
+
+<nav>
+  <button data-tab="plan" aria-current="page">Plan</button>
+  <button data-tab="dates">Dates</button>
+  <button data-tab="settings">Settings</button>
+</nav>
+<div id="toast" hidden></div>
+
+<script>
+const $=s=>document.querySelector(s), enc=encodeURIComponent;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+
+let settings=load('dn_settings',{her:'',phone:'',area:''});
+let plans=load('dn_plans',[]);
+let picked=null, cat='', results=[];
+const centers={};
+
+const CATS={
+  Dinner:['["amenity"="restaurant"]'],
+  Drinks:['["amenity"~"^(bar|pub|biergarten)$"]'],
+  Coffee:['["amenity"="cafe"]'],
+  Dessert:['["amenity"="ice_cream"]','["cuisine"~"dessert|ice_cream|cake|donut|chocolate",i]'],
+  Movies:['["amenity"="cinema"]'],
+  Fun:['["leisure"~"^(bowling_alley|miniature_golf|escape_game|amusement_arcade|trampoline_park|ice_rink)$"]',
+       '["tourism"~"^(museum|gallery|zoo|aquarium|theme_park)$"]','["amenity"~"^(theatre|arts_centre)$"]'],
+  Outdoors:['["leisure"~"^(park|garden|nature_reserve)$"]','["tourism"~"^(viewpoint|picnic_site)$"]','["natural"="beach"]']
+};
+
+/* ---------- small helpers ---------- */
+let toastTimer;
+function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,2600)}
+function status(t){$('#status').textContent=t}
+function show(tab){
+  for(const v of ['plan','dates','settings']) $('#v-'+v).hidden=v!==tab;
+  document.querySelectorAll('nav button').forEach(b=>b.dataset.tab===tab?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
+  if(tab==='dates') renderPlans();
+  if(tab==='plan') renderNudge();
+  scrollTo(0,0);
+}
+function km(a,b){const R=6371,r=x=>x*Math.PI/180,dLa=r(b.lat-a.lat),dLo=r(b.lon-a.lon);
+  const h=Math.sin(dLa/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function mapLink(p){return p.lat?`https://maps.apple.com/?q=${enc(p.name)}&ll=${p.lat.toFixed(5)},${p.lon.toFixed(5)}`
+  :`https://maps.apple.com/?q=${enc((p.name+' '+p.address).trim())}`}
+function fmtDay(d){return d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}
+function fmtTime(d){return d.toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit',hour12:true}).replace(':00','').replace(/\s/g,'')}
+function when(){const d=new Date($('#date').value+'T'+($('#time').value||'18:30'));return isNaN(d)?null:d}
+
+/* ---------- search ---------- */
+async function getCenter(){
+  const area=$('#area').value.trim();
+  if(!area) throw new Error('Type a suburb or city, or tap Near me.');
+  if(centers[area]) return centers[area];
+  const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q='+enc(area));
+  const j=await r.json();
+  if(!j.length) throw new Error(`Couldn't find "${area}". Check the spelling or add the city.`);
+  return centers[area]={lat:+j[0].lat,lon:+j[0].lon};
+}
+
+async function search(){
+  const kw=$('#q').value.trim().replace(/["\\\[\]()]/g,'').replace(/\s+/g,'.*');
+  if(!kw&&!cat){status('Pick a category or type what you feel like.');return}
+  $('#list').innerHTML='';status('Searching…');
+  try{
+    const c=await getCenter(), a=`(around:4000,${c.lat},${c.lon})`;
+    const body=cat
+      ? CATS[cat].map(f=>`nwr${a}["name"]${f}${kw?`[~"^(name|cuisine)$"~"${kw}",i]`:''};`).join('')
+      : `nwr${a}["name"][~"^(amenity|leisure|tourism)$"~"."][~"^(name|cuisine|amenity|leisure|tourism|sport)$"~"${kw}",i];`;
+    const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',
+      body:new URLSearchParams({data:`[out:json][timeout:25];(${body});out center 250;`})});
+    if(!r.ok) throw new Error('The search service is busy. Try again in a moment.');
+    const j=await r.json(), seen=new Set();
+    results=j.elements.map(e=>{
+      const t=e.tags||{}, lat=e.lat??e.center?.lat, lon=e.lon??e.center?.lon;
+      return {name:t.name, lat, lon,
+        kind:(t.cuisine||t.amenity||t.leisure||t.tourism||'').split(';')[0].replace(/_/g,' '),
+        address:[[t['addr:housenumber'],t['addr:street']].filter(Boolean).join(' '),t['addr:suburb']||t['addr:city']].filter(Boolean).join(', '),
+        km:lat?km(c,{lat,lon}):99};
+    }).filter(p=>p.lat).sort((x,y)=>x.km-y.km).filter(p=>{
+      const k=p.name+p.km.toFixed(1); if(seen.has(k)) return false; seen.add(k); return true;
+    }).slice(0,25);
+    if(!results.length){status('Nothing found. Try a different word, a nearby suburb, or add the place yourself below.');return}
+    status(`${results.length} places, closest first. Tap one to pick it.`);
+    $('#list').innerHTML=results.map((p,i)=>`<button class="res" data-i="${i}"><b>${esc(p.name)}</b>
+      <span>${esc([p.kind,p.address,p.km.toFixed(1)+' km'].filter(Boolean).join(', '))}</span></button>`).join('');
+  }catch(e){status(e.message||'Search failed. Check your connection and try again.')}
+}
+
+function pick(p){
+  picked=p; $('#step2').hidden=false; draft();
+  $('#step2').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ---------- ticket + message ---------- */
+function draft(){
+  const d=when(); if(!picked) return;
+  const tk=$('#ticket');
+  tk.innerHTML=`<p class="tk-name">${esc(picked.name)}</p>
+    ${picked.address?`<p class="tk-meta">${esc(picked.address)}</p>`:''}
+    <a href="${esc(mapLink(picked))}" target="_blank" rel="noopener">Check it in Maps</a>
+    <div class="tk-stub"><span class="tk-when">${d?esc(fmtDay(d)+', '+fmtTime(d)):'Pick a day and time'}</span><span class="tk-two">Admit two</span></div>`;
+  if(!d) return;
+  const lines=[(settings.her?`Hey ${settings.her}, date`:'Date')+' night is sorted ✨','',picked.name,`${fmtDay(d)} at ${fmtTime(d)}`];
+  if(picked.address) lines.push(picked.address);
+  lines.push(mapLink(picked));
+  const n=$('#note').value.trim(); if(n) lines.push('',n);
+  $('#msg').value=lines.join('\n');
+}
+
+function makePlan(){
+  const d=when();
+  if(!picked){toast('Pick a place first.');return null}
+  if(!d){toast('Set the day and time.');return null}
+  const p={id:Date.now(),name:picked.name,when:$('#date').value+'T'+$('#time').value,msg:$('#msg').value,sent:false};
+  plans.push(p); save('dn_plans',plans); return p;
+}
+
+function sendPlan(p){
+  const num=(settings.phone||'').replace(/[^\d+]/g,'');
+  if(!num){toast('Add her mobile number first.');show('settings');$('#s-phone').focus();return}
+  p.sent=true; save('dn_plans',plans);
+  location.href=`sms:${num}?&body=${enc(p.msg)}`;
+}
+
+/* ---------- saved plans ---------- */
+function renderPlans(){
+  const now=Date.now(), el=$('#plans');
+  if(!plans.length){el.innerHTML='<p class="status">No dates yet. Plan one and it shows up here.</p>';return}
+  const sorted=[...plans].sort((a,b)=>new Date(b.when)-new Date(a.when));
+  el.innerHTML=sorted.map(p=>{const d=new Date(p.when), past=d<now;
+    return `<div class="plan"><b>${esc(p.name)}</b>
+      <p>${esc(fmtDay(d)+', '+fmtTime(d))}. ${past?'Been and gone':p.sent?'Sent to her':'Not sent yet'}.</p>
+      <div class="row">${past?'':`<button class="btn small ${p.sent?'ghost':'rose'}" data-send="${p.id}">${p.sent?'Send again':'Text it to her'}</button>`}
+      <button class="btn small ghost" data-del="${p.id}">Delete</button></div></div>`}).join('');
+}
+
+function renderNudge(){
+  const now=new Date(), el=$('#nudge');
+  const p=plans.find(p=>{const days=(new Date(p.when)-now)/864e5;return !p.sent&&days>=0&&days<=4.5});
+  if(!p){el.hidden=true;return}
+  el.hidden=false;
+  el.innerHTML=`Time to tell her about ${esc(fmtDay(new Date(p.when)))} at ${esc(p.name)}.
+    <button class="btn" data-send="${p.id}">Text it to her</button>`;
+}
+
+/* ---------- wiring ---------- */
+$('#chips').innerHTML=Object.keys(CATS).map(c=>`<button class="chip" aria-pressed="false">${c}</button>`).join('');
+$('#chips').onclick=e=>{const b=e.target.closest('.chip'); if(!b) return;
+  cat=cat===b.textContent?'':b.textContent;
+  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x.textContent===cat));
+  if($('#area').value.trim()) search();};
+$('#go').onclick=search;
+for(const id of ['#q','#area']) $(id).onkeydown=e=>{if(e.key==='Enter'){e.target.blur();search()}};
+$('#nearme').onclick=()=>{
+  if(!navigator.geolocation){status('Location is not available. Type a suburb instead.');return}
+  status('Finding you…');
+  navigator.geolocation.getCurrentPosition(p=>{
+    centers['Near me']={lat:p.coords.latitude,lon:p.coords.longitude};
+    $('#area').value='Near me'; status(''); if(cat||$('#q').value.trim()) search();
+  },()=>status('Location is off for this app. Type a suburb instead.'));
+};
+$('#list').onclick=e=>{const b=e.target.closest('.res'); if(b) pick(results[+b.dataset.i])};
+$('#madd').onclick=()=>{const name=$('#mname').value.trim();
+  if(!name){toast('Type the place name.');return}
+  pick({name,address:$('#maddr').value.trim(),kind:''})};
+for(const id of ['#date','#time','#note']) $(id).oninput=draft;
+$('#sendnow').onclick=()=>{const p=makePlan(); if(p) sendPlan(p)};
+$('#savelater').onclick=()=>{if(makePlan()){toast('Saved. Open the app when you want to send it.');show('dates')}};
+document.body.addEventListener('click',e=>{
+  const s=e.target.closest('[data-send]'), d=e.target.closest('[data-del]'), t=e.target.closest('[data-tab]');
+  if(s){const p=plans.find(p=>p.id==s.dataset.send); if(p) sendPlan(p)}
+  if(d){plans=plans.filter(p=>p.id!=d.dataset.del); save('dn_plans',plans); renderPlans()}
+  if(t) show(t.dataset.tab);
+});
+$('#s-save').onclick=()=>{
+  settings={her:$('#s-her').value.trim(),phone:$('#s-phone').value.trim(),area:$('#s-area').value.trim()};
+  save('dn_settings',settings); if(!$('#area').value) $('#area').value=settings.area;
+  draft(); toast('Settings saved'); show('plan');
+};
+
+/* ---------- start-up ---------- */
+$('#s-her').value=settings.her; $('#s-phone').value=settings.phone; $('#s-area').value=settings.area;
+$('#area').value=settings.area;
+{const d=new Date(); d.setDate(d.getDate()+((7-d.getDay())%7||7));           // next Sunday
+ $('#date').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+{const c=document.createElement('canvas'); c.width=c.height=180; const x=c.getContext('2d');   // home screen icon
+ x.fillStyle='#f6c453'; x.fillRect(0,0,180,180); x.fillStyle='#d63a72'; x.font='120px serif';
+ x.textAlign='center'; x.textBaseline='middle'; x.fillText('♥',90,100);
+ const l=document.createElement('link'); l.rel='apple-touch-icon'; l.href=c.toDataURL(); document.head.appendChild(l)}
+renderNudge();
+if(!settings.phone) show('settings');
+</script>
+</body>
+</html>
