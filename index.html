@@ -21,12 +21,14 @@ body{margin:0 auto;max-width:520px;background:var(--bg);color:var(--ink);
   font:17px/1.35 -apple-system,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;
   padding:calc(env(safe-area-inset-top) + 26px) 16px calc(env(safe-area-inset-bottom) + 120px)}
 h1{font-size:34px;font-weight:700;letter-spacing:.01em;margin:0 4px 2px}
-h2{font-size:20px;font-weight:700;margin:30px 4px 10px}
+h2{font-size:20px;font-weight:700;margin:28px 4px 10px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.gear svg{width:26px;height:26px;fill:none;stroke:var(--tint);stroke-width:1.9;stroke-linecap:round}
 .sub{color:var(--soft);font-size:15px;margin:0 4px 18px}
 .foot{color:var(--soft);font-size:13px;margin:8px 16px 0}
 input,textarea,button{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none;padding:0}
-button:active,a.btn:active{opacity:.6}
+button:active,.btn:active{opacity:.6}
 button:focus-visible,a:focus-visible{outline:3px solid var(--tint);outline-offset:2px}
 
 .box{display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:12px;padding:0 12px;min-height:46px;margin-top:8px}
@@ -34,7 +36,6 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--tint);outline-offse
 .box input{flex:1;min-width:0;border:0;background:none;outline:0;padding:11px 0}
 .box:focus-within{box-shadow:0 0 0 2px var(--tint)}
 .link{color:var(--tint);font-weight:600;font-size:16px;white-space:nowrap;padding:8px 0}
-
 .chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;padding:8px 15px;border-radius:99px;background:var(--card);font-size:15px;font-weight:500}
@@ -43,51 +44,74 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--tint);outline-offse
 .btn{display:block;width:100%;min-height:50px;line-height:50px;border-radius:14px;background:var(--tint);color:#fff;
   font-weight:600;text-align:center;text-decoration:none;margin-top:12px}
 .btn.gray{background:var(--fill);color:var(--tint)}
-.btn.small{display:inline-block;width:auto;min-height:36px;line-height:36px;padding:0 16px;border-radius:99px;font-size:15px;margin:0}
+.btn.small{display:inline-block;width:auto;min-height:36px;line-height:36px;padding:0 15px;border-radius:99px;font-size:15px;margin:0}
+.two{display:flex;gap:10px}.two .btn{flex:1}
+.rowb{display:flex;gap:8px;flex-wrap:wrap}
 
 .status{color:var(--soft);font-size:15px;margin:14px 4px 4px}
-.res{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--card);border-radius:16px;padding:10px;margin-top:8px}
-.res img{flex:none;width:78px;height:78px;border-radius:11px;object-fit:cover;background:var(--fill)}
+.res{background:var(--card);border-radius:16px;padding:10px;margin-top:8px}
+.resmain{display:flex;gap:12px;align-items:center;width:100%;text-align:left}
+.resmain img{flex:none;width:78px;height:78px;border-radius:11px;object-fit:cover;background:var(--fill)}
 .info{display:block;min-width:0;padding:2px 4px}
 .info b{display:block;font-weight:600;line-height:1.2;margin-bottom:3px}
 .m{display:block;font-size:14px;color:var(--soft);line-height:1.35}
 .rate{color:#ff9500;font-weight:600}
+.acts{display:flex;justify-content:space-between;gap:10px;padding:10px 4px 2px;margin-top:8px;border-top:.5px solid var(--line)}
+.acts a,.acts button,.m a{color:var(--tint);font-weight:600;font-size:14px;text-decoration:none}
 
 .group{background:var(--card);border-radius:14px;overflow:hidden}
 .field{display:flex;align-items:center;gap:12px;padding:0 16px;min-height:50px;position:relative}
 .field+.field::before{content:"";position:absolute;left:16px;right:0;top:0;border-top:.5px solid var(--line)}
-.field label{flex:none;width:98px}
+.field label{flex:none;width:104px}
 .field input{flex:1;min-width:0;border:0;background:none;outline:0;padding:14px 0}
-.field input[type=date],.field input[type=time]{flex:none;margin-left:auto;color:var(--tint)}
+.field input[type=time]{flex:none;margin-left:auto;color:var(--tint)}
 .field:focus-within label{color:var(--tint)}
-textarea{display:block;width:100%;min-height:200px;border:0;outline:0;background:var(--card);border-radius:14px;padding:14px 16px;resize:vertical}
+textarea{display:block;width:100%;min-height:170px;border:0;outline:0;background:var(--card);border-radius:14px;padding:14px 16px;resize:vertical}
+textarea.short{min-height:92px}
 textarea:focus{box-shadow:0 0 0 2px var(--tint)}
 details{margin-top:14px}
 summary{color:var(--tint);font-weight:600;font-size:16px;padding:6px 4px 10px;list-style:none}
 summary::-webkit-details-marker{display:none}
+.seg{display:flex;background:var(--fill);border-radius:11px;padding:2px;margin-bottom:10px}
+.seg button{flex:1;padding:7px 4px;border-radius:9px;font-size:15px;font-weight:600}
+.seg small{display:block;font-weight:400;font-size:12px;color:var(--soft)}
+.seg button[aria-pressed=true]{background:var(--card);box-shadow:0 2px 6px rgba(0,0,0,.14)}
+.headrow{display:flex;justify-content:space-between;align-items:baseline}
 
 .pass{background:var(--card);border-radius:22px;overflow:hidden;margin-top:18px;box-shadow:0 10px 30px rgba(0,0,0,.14)}
-.pass img{display:block;width:100%;height:180px;object-fit:cover;background:var(--fill)}
-.pass-body{padding:16px 18px 14px}
-.pass-name{font-size:24px;font-weight:700;line-height:1.15;margin:0 0 6px}
-.pass-when{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border-top:.5px solid var(--line);font-weight:600}
-.pass-when a{color:var(--tint);text-decoration:none;white-space:nowrap}
+.pass>img{display:block;width:100%;height:180px;object-fit:cover;background:var(--fill)}
+.pass-body{padding:14px 18px 12px}
+.pass-body+.pass-body{border-top:.5px solid var(--line)}
+.pass-name{font-size:23px;font-weight:700;line-height:1.15;margin:0 0 5px}
+.pass-when{padding:14px 18px;border-top:.5px solid var(--line);font-weight:600}
 
 .nudge{background:var(--tint);color:#fff;border-radius:18px;padding:16px;margin-bottom:22px;font-weight:500}
 .nudge .btn{background:#fff;color:var(--tint)}
 .plan{background:var(--card);border-radius:16px;padding:14px 16px;margin-top:10px}
-.plan b{font-weight:600}
+.plan>img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;margin-bottom:12px;background:var(--fill)}
+.plan b{display:block;font-weight:600;margin:2px 0}
 .plan p{margin:2px 0 12px;color:var(--soft);font-size:14px}
-.plan div{display:flex;gap:8px}
+.plan .quote{color:var(--ink);font-size:16px}
 
-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 12px);display:flex;gap:4px;padding:5px;
+#sheet{position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.42);display:flex;align-items:flex-end}
+.sheet-card{background:var(--bg);width:100%;max-width:520px;margin:0 auto;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;
+  padding:22px 16px calc(env(safe-area-inset-bottom) + 22px)}
+.prev{display:block;width:100%;border-radius:14px;max-height:260px;object-fit:cover}
+.starrow{display:flex;align-items:center;gap:2px;min-height:48px}
+.starrow span{width:74px}
+.starrow button{font-size:30px;line-height:1;color:#ff9500;padding:4px}
+.big{font-size:60px;font-weight:800;line-height:1;margin:0 4px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;background:var(--fill)}
+
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 12px);display:flex;gap:2px;padding:5px;
   border-radius:99px;background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
   box-shadow:0 8px 28px rgba(0,0,0,.16),inset 0 0 0 .5px var(--line)}
-nav button{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:86px;padding:7px 10px 6px;border-radius:99px;
+nav button{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:76px;padding:7px 8px 6px;border-radius:99px;
   font-size:11px;font-weight:600;color:var(--soft)}
 nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 nav button[aria-current=page]{color:var(--tint);background:var(--fill)}
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 100px);background:var(--glass);
+#toast{position:fixed;z-index:9;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 100px);background:var(--glass);
   -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 6px 22px rgba(0,0,0,.18);
   padding:11px 18px;border-radius:99px;font-size:15px;font-weight:500;max-width:88%;text-align:center}
 </style>
@@ -96,8 +120,9 @@ nav button[aria-current=page]{color:var(--tint);background:var(--fill)}
 
 <main id="v-plan">
   <div id="nudge" class="nudge" hidden></div>
-  <h1>Date Night</h1>
-  <p class="sub">Find a spot, set the time, text her the plan.</p>
+  <div class="top"><h1>Date Night</h1>
+    <button class="gear" data-tab="settings" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M4 7h8M18 7h2M4 17h2M12 17h8"/><circle cx="15" cy="7" r="2.500"/><circle cx="9" cy="17" r="2.500"/></svg></button></div>
+  <p class="sub" id="countdown"></p>
 
   <div class="chips" id="chips"></div>
   <div class="box">
@@ -105,54 +130,74 @@ nav button[aria-current=page]{color:var(--tint);background:var(--fill)}
     <input id="q" placeholder="Italian, rooftop, mini golf" aria-label="What do you feel like?" enterkeyhint="search">
   </div>
   <div class="box">
-    <svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M12 21s7-6.200 7-11.500a7 7 0 0 0-14 0C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></svg>
     <input id="area" placeholder="Suburb or city" aria-label="Where?" enterkeyhint="search">
     <button class="link" id="nearme">Near me</button>
   </div>
-  <button class="btn" id="go">Search</button>
+  <div class="two"><button class="btn" id="go">Search</button><button class="btn gray" id="surprise">Surprise me</button></div>
+  <div class="two" id="surpriseOpts" hidden>
+    <button class="btn gray" id="surWish">From my wishlist</button><button class="btn gray" id="surAny">Anything nearby</button></div>
   <p class="status" id="status" aria-live="polite"></p>
   <div id="list"></div>
+  <button class="btn gray" id="more" hidden>Show more</button>
+  <p class="foot" id="src"></p>
 
   <details>
     <summary>Can't find it? Add the place yourself</summary>
     <div class="group">
-      <div class="field"><label for="mname">Name</label><input id="mname" placeholder="Place name"></div>
-      <div class="field"><label for="maddr">Address</label><input id="maddr" placeholder="Street and suburb"></div>
+      <div class="field"><label for="mname">Name</label><input id="mname" placeholder="Place or activity"></div>
+      <div class="field"><label for="maddr">Address</label><input id="maddr" placeholder="Optional"></div>
     </div>
     <button class="btn gray" id="madd">Use this place</button>
   </details>
 
   <section id="step2" hidden>
     <div class="pass" id="pass"></div>
+    <button class="btn gray" id="addstop">Add a second stop</button>
 
     <div id="movieGroup" hidden>
       <h2>The movie</h2>
-      <div class="group">
-        <div class="field"><label for="movie">Movie</label><input id="movie" placeholder="What are you seeing?"></div>
-      </div>
+      <div class="group"><div class="field"><label for="movie">Movie</label><input id="movie" placeholder="What are you seeing?"></div></div>
       <a class="btn gray" id="sessions" target="_blank" rel="noopener">See session times</a>
-      <p class="foot">Opens the cinema's site. Pick a session, then set that time below.</p>
     </div>
 
     <h2>When</h2>
+    <div class="seg" id="sun"></div>
     <div class="group">
-      <div class="field"><label for="date">Day</label><input type="date" id="date"></div>
       <div class="field"><label for="time">Time</label><input type="time" id="time" value="18:30"></div>
+      <div class="field" id="t2row" hidden><label for="time2">Second stop</label><input type="time" id="time2"></div>
       <div class="field"><label for="note">Note</label><input id="note" placeholder="Dress nice, bring a jacket"></div>
     </div>
+    <p class="foot" id="wx"></p>
 
-    <h2>Your message</h2>
+    <div class="headrow"><h2>Your message</h2><button class="link" data-act="shuffle">Shuffle wording</button></div>
     <textarea id="msg" aria-label="Message to send"></textarea>
     <button class="btn" id="sendnow">Text it to her now</button>
     <button class="btn gray" id="savelater">Save and send later</button>
-    <p class="foot">To schedule it for Wednesday, tap "Text it to her now", then in Messages tap the + next to the text box and choose Send Later.</p>
+    <button class="btn gray" id="cal">Add reminders to Calendar</button>
+    <p class="foot">Calendar gets the date on Sunday and a Wednesday 6pm reminder to send the message.</p>
   </section>
+</main>
+
+<main id="v-wish" hidden>
+  <h1>Wishlist</h1>
+  <p class="sub">Places you want to take her.</p>
+  <div id="wishlist"></div>
 </main>
 
 <main id="v-dates" hidden>
   <h1>Your Dates</h1>
-  <p class="sub">Plans you've saved or sent.</p>
+  <p class="sub">What's coming up, and everywhere you've been.</p>
   <div id="plans"></div>
+</main>
+
+<main id="v-her" hidden>
+  <h1 id="herTitle">Her Favourites</h1>
+  <p class="sub">Little things worth remembering. Saves as you type.</p>
+  <h2>Loves</h2><textarea class="short" data-fav="loves" placeholder="Foods, flowers, things that make her smile"></textarea>
+  <h2>Not a fan of</h2><textarea class="short" data-fav="hates" placeholder="Foods and places to avoid"></textarea>
+  <h2>Allergies</h2><textarea class="short" data-fav="allergies" placeholder="Anything to tell the restaurant"></textarea>
+  <h2>Places she's mentioned</h2><textarea class="short" data-fav="mentioned" placeholder="That bar she saw online"></textarea>
 </main>
 
 <main id="v-settings" hidden>
@@ -162,32 +207,37 @@ nav button[aria-current=page]{color:var(--tint);background:var(--fill)}
     <div class="field"><label for="s-her">Her name</label><input id="s-her" autocomplete="off"></div>
     <div class="field"><label for="s-phone">Her mobile</label><input id="s-phone" type="tel" placeholder="0412 345 678"></div>
     <div class="field"><label for="s-area">Usual area</label><input id="s-area" placeholder="New Farm, Brisbane"></div>
-  </div>
-  <h2>Photos and ratings</h2>
-  <div class="group">
     <div class="field"><label for="s-key">Google key</label><input id="s-key" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Optional"></div>
   </div>
-  <p class="foot">Paste a Google Places key to get photos, ratings and prices. Leave it empty to search without them.</p>
   <button class="btn" id="s-save">Save settings</button>
+  <h2>Backup</h2>
+  <button class="btn gray" data-act="backup">Back up everything</button>
+  <label class="btn gray">Restore from a backup<input type="file" id="restoreFile" hidden></label>
+  <p class="foot">A backup holds your dates, scrapbook photos, wishlist and her favourites in one file. Save it to Files or iCloud Drive.</p>
 </main>
 
 <nav>
-  <button data-tab="plan" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.500A4 4 0 0 1 19 10c0 5.600-7 10-7 10z"/></svg>Plan</button>
+  <button data-tab="plan" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.400-7-10a4 4 0 0 1 7-2.500A4 4 0 0 1 19 10c0 5.600-7 10-7 10z"/></svg>Plan</button>
+  <button data-tab="wish"><svg viewBox="0 0 24 24"><path d="M7 4h10v16l-5-4-5 4z"/></svg>Wishlist</button>
   <button data-tab="dates"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>Dates</button>
-  <button data-tab="settings"><svg viewBox="0 0 24 24"><path d="M4 7h8M18 7h2M4 17h2M12 17h8"/><circle cx="15" cy="7" r="2.500"/><circle cx="9" cy="17" r="2.500"/></svg>Settings</button>
+  <button data-tab="her"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Her</button>
 </nav>
+<div id="sheet" hidden><div class="sheet-card" id="sheetBody"></div></div>
 <div id="toast" hidden></div>
 
 <script>
-const $=s=>document.querySelector(s), enc=encodeURIComponent;
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s), enc=encodeURIComponent;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
 const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const cap=s=>s?s[0].toUpperCase()+s.slice(1):'';
+const pad=n=>String(n).padStart(2,'0');
+const rnd=n=>Math.floor(Math.random()*n);
 
 let settings=Object.assign({her:'',phone:'',area:'',key:''},load('dn_settings',{}));
-let plans=load('dn_plans',[]);
-let picked=null, cat='', results=[];
+let plans=load('dn_plans',[]), wish=load('dn_wish',[]), favs=load('dn_favs',{});
+let cat='', pool=[], shown=0, gToken='', lastQuery=null;
+let stops=[], addingStop=false, which=0, tpl=0, draftId=null, editing=null;
 const centers={};
 
 /* each category: [words for Google, filters for OpenStreetMap] */
@@ -203,28 +253,56 @@ const CATS={
 };
 const PRICE={PRICE_LEVEL_INEXPENSIVE:'$',PRICE_LEVEL_MODERATE:'$$',PRICE_LEVEL_EXPENSIVE:'$$$',PRICE_LEVEL_VERY_EXPENSIVE:'$$$$'};
 
+/* ---------- photo storage (kept on this phone) ---------- */
+const idb=(()=>{let p;
+  const db=()=>p||(p=new Promise((res,rej)=>{const r=indexedDB.open('datenight',1);
+    r.onupgradeneeded=()=>r.result.createObjectStore('photos');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
+  const tx=(mode,f)=>db().then(d=>new Promise((res,rej)=>{const q=f(d.transaction('photos',mode).objectStore('photos'));
+    q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)}));
+  return{get:k=>tx('readonly',s=>s.get(k)),set:(k,v)=>tx('readwrite',s=>s.put(v,k)),del:k=>tx('readwrite',s=>s.delete(k)),
+    all:()=>Promise.all([tx('readonly',s=>s.getAllKeys()),tx('readonly',s=>s.getAll())])}})();
+function fillPhotos(){$$('img[data-photo]').forEach(img=>idb.get(+img.dataset.photo).then(v=>{if(v)img.src=v}).catch(()=>{}))}
+function shrink(file){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);
+  img.onload=()=>{const k=Math.min(1,1100/Math.max(img.width,img.height)),c=document.createElement('canvas');
+    c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.72))};
+  img.onerror=rej;img.src=u})}
+
 /* ---------- small helpers ---------- */
 let toastTimer;
-function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,2600)}
+function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,2800)}
 function status(t){$('#status').textContent=t}
 function show(tab){
-  for(const v of ['plan','dates','settings']) $('#v-'+v).hidden=v!==tab;
-  document.querySelectorAll('nav button').forEach(b=>b.dataset.tab===tab?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
-  if(tab==='dates') renderPlans();
-  if(tab==='plan') renderNudge();
+  for(const v of ['plan','wish','dates','her','settings']) $('#v-'+v).hidden=v!==tab;
+  $$('nav button').forEach(b=>b.dataset.tab===tab?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
+  if(tab==='dates') renderDates();
+  if(tab==='wish') renderWish();
+  if(tab==='plan') renderTop();
+  if(tab==='her') $('#herTitle').textContent=settings.her?settings.her+"'s Favourites":'Her Favourites';
   scrollTo(0,0);
 }
 function km(a,b){const R=6371,r=x=>x*Math.PI/180,dLa=r(b.lat-a.lat),dLo=r(b.lon-a.lon);
   const h=Math.sin(dLa/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
-function mapLink(p){return p.lat?`https://maps.apple.com/?q=${enc(p.name)}&ll=${p.lat.toFixed(5)},${p.lon.toFixed(5)}`
-  :`https://maps.apple.com/?q=${enc((p.name+' '+p.address).trim())}`}
-function fmtDay(d){return d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}
-function fmtTime(d){return d.toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit',hour12:true}).replace(':00','').replace(/\s/g,'')}
-function when(){const d=new Date($('#date').value+'T'+($('#time').value||'18:30'));return isNaN(d)?null:d}
-function isCinema(p){return cat==='Movies'||/cinema|movie/i.test(p.kind||'')}
+function mapLink(p){return p.lat?`https://maps.apple.com/?q=${enc(p.name)}&ll=${(+p.lat).toFixed(5)},${(+p.lon).toFixed(5)}`
+  :`https://maps.apple.com/?q=${enc((p.name+' '+(p.address||'')).trim())}`}
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+function sunday(w){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+(7-d.getDay())%7+7*w);return d}
+function when(){const d=new Date(iso(sunday(which))+'T'+($('#time').value||'18:30'));return isNaN(d)?null:d}
+function t12(v){if(!v)return'';const[h,m]=v.split(':').map(Number);return `${h%12||12}${m?':'+pad(m):''}${h<12?'am':'pm'}`}
+const fmtTime=d=>t12(d.getHours()+':'+d.getMinutes());
+const fmtDay=d=>d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'});
+const ord=n=>n+(n%10==1&&n!=11?'st':n%10==2&&n!=12?'nd':n%10==3&&n!=13?'rd':'th');
+const asc=(a,b)=>new Date(a.when)-new Date(b.when);
+const byId=id=>plans.find(p=>p.id==id);
+const planStops=p=>p.stops||[{name:p.name||'Date night'}];
+const planName=p=>planStops(p).map(s=>s.name).join(' then ');
+const dateNo=p=>[...plans].sort(asc).findIndex(x=>x.id===p.id)+1;
+const stars=n=>'★'.repeat(n)+'☆'.repeat(5-n);
+const isCinema=p=>/cinema|movie/i.test(p.kind||'');
+const inWish=p=>wish.some(w=>w.name===p.name);
 function metaHTML(p){
   const a=[];
-  if(p.rating) a.push(`<span class="rate">★ ${p.rating.toFixed(1)}</span>${p.count?' ('+p.count.toLocaleString()+')':''}`);
+  if(p.rating) a.push(`<span class="rate">★ ${(+p.rating).toFixed(1)}</span>${p.count?' ('+(+p.count).toLocaleString()+')':''}`);
   if(p.price) a.push(esc(p.price));
   if(p.kind) a.push(esc(cap(p.kind)));
   const b=[p.address,p.km!=null?p.km.toFixed(1)+' km':'',p.open===true?'Open now':p.open===false?'Closed now':''].filter(Boolean).map(esc);
@@ -242,23 +320,23 @@ async function getCenter(){
   return centers[area]={lat:+j[0].lat,lon:+j[0].lon};
 }
 
-async function searchGoogle(c,raw){
-  const area=$('#area').value.trim();
-  const text=[raw,cat?CATS[cat][0]:''].filter(Boolean).join(' ')+(area&&area!=='Near me'?' in '+area:'');
+async function searchGoogle(c,text,token){
+  const body={textQuery:text,pageSize:8,locationBias:{circle:{center:{latitude:c.lat,longitude:c.lon},radius:6000}}};
+  if(token) body.pageToken=token;
   const r=await fetch('https://places.googleapis.com/v1/places:searchText',{method:'POST',
     headers:{'Content-Type':'application/json','X-Goog-Api-Key':settings.key,
-      'X-Goog-FieldMask':'places.displayName,places.shortFormattedAddress,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.priceLevel,places.photos,places.primaryTypeDisplayName,places.websiteUri,places.currentOpeningHours.openNow'},
-    body:JSON.stringify({textQuery:text,pageSize:8,locationBias:{circle:{center:{latitude:c.lat,longitude:c.lon},radius:6000}}})});
+      'X-Goog-FieldMask':'nextPageToken,places.displayName,places.shortFormattedAddress,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.priceLevel,places.photos,places.primaryTypeDisplayName,places.websiteUri,places.currentOpeningHours.openNow'},
+    body:JSON.stringify(body)});
   const j=await r.json();
   if(!r.ok) throw new Error('Google key problem: '+(j.error?.message||'request refused')+' Check the key in Settings.');
-  return (j.places||[]).map(p=>{
+  return {next:j.nextPageToken||'',items:(j.places||[]).map(p=>{
     const lat=p.location?.latitude, lon=p.location?.longitude;
     return {name:p.displayName?.text||'Unnamed place', address:p.shortFormattedAddress||p.formattedAddress||'',
       kind:p.primaryTypeDisplayName?.text||'', lat, lon, km:lat?km(c,{lat,lon}):null,
       rating:p.rating, count:p.userRatingCount, price:PRICE[p.priceLevel]||'', open:p.currentOpeningHours?.openNow,
       website:p.websiteUri||'',
       photo:p.photos?.[0]?`https://places.googleapis.com/v1/${p.photos[0].name}/media?maxWidthPx=600&key=${enc(settings.key)}`:''};
-  });
+  })};
 }
 
 async function searchOSM(c,raw){
@@ -278,60 +356,122 @@ async function searchOSM(c,raw){
       km:lat?km(c,{lat,lon}):99};
   }).filter(p=>p.lat).sort((x,y)=>x.km-y.km).filter(p=>{
     const k=p.name+p.km.toFixed(1); if(seen.has(k)) return false; seen.add(k); return true;
-  }).slice(0,25);
+  }).slice(0,60);
+}
+
+const rowHTML=(p,i)=>`<div class="res"><button class="resmain" data-i="${i}">
+  ${p.photo?`<img src="${esc(p.photo)}" alt="" loading="lazy">`:''}
+  <span class="info"><b>${esc(p.name)}</b>${metaHTML(p)}</span></button>
+  <div class="acts"><a href="${esc(mapLink(p))}" target="_blank" rel="noopener">Photos and reviews</a>
+  <button data-wish="${i}">${inWish(p)?'Saved to wishlist':'Save to wishlist'}</button></div></div>`;
+
+function renderList(from){
+  const html=pool.slice(from,shown).map((p,k)=>rowHTML(p,from+k)).join('');
+  if(from) $('#list').insertAdjacentHTML('beforeend',html); else $('#list').innerHTML=html;
+  status(`Showing ${shown} places. Tap one to pick it.`);
+  $('#more').hidden=!(shown<pool.length||gToken);
+  $('#src').textContent='Results from '+(settings.key?'Google':'OpenStreetMap');
 }
 
 async function search(){
   const raw=$('#q').value.trim();
-  if(!raw&&!cat){status('Pick a category or type what you feel like.');return}
-  $('#list').innerHTML='';status('Searching…');
+  if(!raw&&!cat){status('Pick a category or type what you feel like.');return false}
+  $('#list').innerHTML='';$('#more').hidden=true;$('#src').textContent='';status('Searching…');
   try{
     const c=await getCenter();
-    results=settings.key?await searchGoogle(c,raw):await searchOSM(c,raw);
-    if(!results.length){status('Nothing found. Try a different word, a nearby suburb, or add the place yourself below.');return}
-    status(`${results.length} places. Tap one to pick it.`);
-    $('#list').innerHTML=results.map((p,i)=>`<button class="res" data-i="${i}">
-      ${p.photo?`<img src="${esc(p.photo)}" alt="" loading="lazy">`:''}
-      <span class="info"><b>${esc(p.name)}</b>${metaHTML(p)}</span></button>`).join('')
-      +`<p class="foot">Results from ${settings.key?'Google':'OpenStreetMap'}</p>`;
-  }catch(e){status(e.message||'Search failed. Check your connection and try again.')}
+    if(settings.key){
+      const area=$('#area').value.trim();
+      const text=[raw,cat?CATS[cat][0]:''].filter(Boolean).join(' ')+(area&&area!=='Near me'?' in '+area:'');
+      lastQuery={c,text};
+      const r=await searchGoogle(c,text); pool=r.items; gToken=r.next;
+    }else{pool=await searchOSM(c,raw); gToken=''}
+    if(!pool.length){status('Nothing found. Try a different word, a nearby suburb, or add the place yourself below.');return false}
+    shown=Math.min(8,pool.length); renderList(0); return true;
+  }catch(e){status(e.message||'Search failed. Check your connection and try again.');return false}
 }
 
-/* ---------- picked place + message ---------- */
+async function more(){
+  const from=shown;
+  if(shown<pool.length){shown=Math.min(shown+8,pool.length);renderList(from);return}
+  if(!gToken) return;
+  try{const r=await searchGoogle(lastQuery.c,lastQuery.text,gToken);
+    pool=pool.concat(r.items);gToken=r.next;shown=pool.length;renderList(from)}
+  catch(e){status(e.message)}
+}
+
+function setCat(c){cat=c;$$('.chip').forEach(x=>x.setAttribute('aria-pressed',x.textContent===cat))}
+
+/* ---------- picked places ---------- */
 function pick(p){
-  picked=p;
-  $('#pass').innerHTML=`${p.photo?`<img src="${esc(p.photo)}" alt="">`:''}
-    <div class="pass-body"><p class="pass-name">${esc(p.name)}</p>${metaHTML(p)}</div>
-    <div class="pass-when"><span id="passwhen"></span><a href="${esc(mapLink(p))}" target="_blank" rel="noopener">Open in Maps</a></div>`;
-  const cinema=isCinema(p);
-  $('#movieGroup').hidden=!cinema;
-  if(cinema) $('#sessions').href=p.website||`https://www.google.com/search?q=${enc(p.name+' session times')}`;
-  else $('#movie').value='';
-  $('#step2').hidden=false; draft();
+  if(addingStop&&stops.length) stops[1]=p; else{stops=[p];draftId=null}
+  addingStop=false; renderPass(); $('#step2').hidden=false; draft(); weather();
   $('#step2').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function draft(){
-  if(!picked) return;
-  const d=when();
-  $('#passwhen').textContent=d?fmtDay(d)+', '+fmtTime(d):'Pick a day and time';
-  if(!d) return;
-  const movie=$('#movie').value.trim(), n=$('#note').value.trim();
-  const lines=[(settings.her?`Hey ${settings.her}, date`:'Date')+' night is sorted ✨','',picked.name];
-  if(movie) lines.push('Movie: '+movie);
-  lines.push(`${fmtDay(d)} at ${fmtTime(d)}`);
-  if(picked.address) lines.push(picked.address);
-  lines.push(mapLink(picked));
-  if(n) lines.push('',n);
-  $('#msg').value=lines.join('\n');
+function renderPass(){
+  const two=stops.length>1;
+  $('#pass').innerHTML=(stops[0].photo?`<img src="${esc(stops[0].photo)}" alt="">`:'')+stops.map((s,i)=>`<div class="pass-body">
+    ${two?`<span class="m">${i?'Then':'First'}</span>`:''}<p class="pass-name">${esc(s.name)}</p>${metaHTML(s)}
+    <span class="m"><a href="${esc(mapLink(s))}" target="_blank" rel="noopener">Photos and reviews</a>${i?' · <a href="#" data-act="rm2">Remove</a>':''}</span></div>`).join('')
+    +'<div class="pass-when" id="passwhen"></div>';
+  $('#addstop').hidden=two; $('#t2row').hidden=!two;
+  const cin=stops.find(isCinema);
+  $('#movieGroup').hidden=!cin;
+  if(cin) $('#sessions').href=cin.website||`https://www.google.com/search?q=${enc(cin.name+' session times')}`;
+  else $('#movie').value='';
 }
 
+function renderSeg(){
+  $('#sun').innerHTML=[0,1].map(w=>`<button data-sun="${w}" aria-pressed="${w===which}">${w?'Next':'This'} Sunday
+    <small>${sunday(w).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</small></button>`).join('');
+}
+
+function draft(){
+  if(!stops.length) return;
+  const d=when();
+  $('#passwhen').textContent=d?fmtDay(d)+', '+fmtTime(d):'Pick a time';
+  if(!d) return;
+  const hi=settings.her?'Hey '+settings.her:'Hey you', D=which?'Sunday the '+ord(d.getDate()):'Sunday';
+  const P=stops[0].name, T=fmtTime(d), movie=$('#movie').value.trim(), n=$('#note').value.trim(), t2=t12($('#time2').value);
+  let x='';
+  if(movie) x+=` We're seeing ${movie}.`;
+  if(stops[1]) x+=` Then ${stops[1].name}${t2?' at '+t2:''} after.`;
+  const all=[
+    `${hi} 💕 ${D} is sorted. I'm taking you to ${P} at ${T}.${x} Can't wait.`,
+    `${hi}, keep ${D} free ✨ We're going to ${P} at ${T}.${x} I've been looking forward to this all week.`,
+    `Date night plans are in 🥂 ${D}, ${T}, ${P}.${x} Just bring yourself.`,
+    `${hi} ❤️ ${D} it's you, me and ${P} at ${T}.${x} Counting down already.`,
+    `${D} can't come soon enough 😊 ${P} at ${T}.${x} See you then, gorgeous.`];
+  $('#msg').value=all[tpl%all.length]+(n?'\n\n'+n:'');
+}
+
+let wxTimer;
+function weather(){
+  clearTimeout(wxTimer);
+  wxTimer=setTimeout(async()=>{
+    const s=stops[0], d=when(), el=$('#wx'); el.textContent='';
+    if(!s||!s.lat||!d||(d-Date.now())/864e5>15) return;
+    try{
+      const day=iso(d);
+      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${s.lat}&longitude=${s.lon}&hourly=temperature_2m,precipitation_probability,weather_code&timezone=auto&start_date=${day}&end_date=${day}`);
+      const h=(await r.json()).hourly, i=d.getHours();
+      if(!h||h.temperature_2m[i]==null) return;
+      const c=h.weather_code[i], word=c===0?'Clear':c<4?'Partly cloudy':c<50?'Foggy':c<70?'Rain':c<80?'Snow':c<95?'Showers':'Storms';
+      el.textContent=`Forecast for Sunday ${fmtTime(d)}: ${word}, ${Math.round(h.temperature_2m[i])}°, ${h.precipitation_probability[i]??0}% chance of rain.`;
+    }catch{}
+  },400);
+}
+
+/* ---------- saving and sending ---------- */
 function makePlan(){
   const d=when();
-  if(!picked){toast('Pick a place first.');return null}
-  if(!d){toast('Set the day and time.');return null}
-  const p={id:Date.now(),name:picked.name,when:$('#date').value+'T'+$('#time').value,msg:$('#msg').value,sent:false};
-  plans.push(p); save('dn_plans',plans); return p;
+  if(!stops.length){toast('Pick a place first.');return null}
+  if(!d){toast('Set the time.');return null}
+  const p={id:draftId||Date.now(),when:iso(sunday(which))+'T'+($('#time').value||'18:30'),
+    stops:stops.map(({name,address,kind,lat,lon})=>({name,address,kind,lat,lon})),msg:$('#msg').value,sent:false};
+  const i=plans.findIndex(x=>x.id===p.id);
+  if(i>=0){p.sent=plans[i].sent;p.mem=plans[i].mem;plans[i]=p}else plans.push(p);
+  draftId=p.id; save('dn_plans',plans); return p;
 }
 
 function sendPlan(p){
@@ -341,34 +481,137 @@ function sendPlan(p){
   location.href=`sms:${num}?&body=${enc(p.msg)}`;
 }
 
-/* ---------- saved plans ---------- */
-function renderPlans(){
-  const now=Date.now(), el=$('#plans');
-  if(!plans.length){el.innerHTML='<p class="status">No dates yet. Plan one and it shows up here.</p>';return}
-  const sorted=[...plans].sort((a,b)=>new Date(b.when)-new Date(a.when));
-  el.innerHTML=sorted.map(p=>{const d=new Date(p.when), past=d<now;
-    return `<div class="plan"><b>${esc(p.name)}</b>
-      <p>${esc(fmtDay(d)+', '+fmtTime(d))} · ${past?'Been and gone':p.sent?'Sent to her':'Not sent yet'}</p>
-      <div>${past?'':`<button class="btn small ${p.sent?'gray':''}" data-send="${p.id}">${p.sent?'Send again':'Text it to her'}</button>`}
-      <button class="btn small gray" data-del="${p.id}">Delete</button></div></div>`}).join('');
+function openICS(p){
+  const f=d=>`${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+  const x=s=>String(s||'').replace(/([,;\\])/g,'\\$1');
+  const s=new Date(p.when), w=new Date(s); w.setDate(w.getDate()-4); w.setHours(18,0,0,0);
+  const ev=(uid,st,mins,sum,loc,trig)=>['BEGIN:VEVENT',`UID:${uid}@datenight`,`DTSTAMP:${f(new Date())}Z`,`DTSTART:${f(st)}`,
+    `DTEND:${f(new Date(+st+mins*6e4))}`,`SUMMARY:${x(sum)}`,...(loc?[`LOCATION:${x(loc)}`]:[]),
+    'BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${x(sum)}`,`TRIGGER:${trig}`,'END:VALARM','END:VEVENT'];
+  const a=planStops(p)[0];
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Date Night//EN',
+    ...ev(p.id,s,120,'Date night: '+planName(p),[a.name,a.address].filter(Boolean).join(', '),'-PT2H'),
+    ...(w>new Date()?ev(p.id+'w',w,15,'Send the date night message','','PT0M'):[]),'END:VCALENDAR'];
+  const url='data:text/calendar;charset=utf-8,'+enc(lines.join('\r\n'));
+  if(!window.open(url,'_blank')){const l=document.createElement('a');l.href=url;l.download='date-night.ics';l.click()}
 }
 
-function renderNudge(){
-  const now=new Date(), el=$('#nudge');
-  const p=plans.find(p=>{const days=(new Date(p.when)-now)/864e5;return !p.sent&&days>=0&&days<=4.5});
-  if(!p){el.hidden=true;return}
-  el.hidden=false;
-  el.innerHTML=`Time to tell her about ${esc(fmtDay(new Date(p.when)))} at ${esc(p.name)}.
-    <button class="btn" data-send="${p.id}">Text it to her</button>`;
+/* ---------- top of the Plan tab ---------- */
+function renderTop(){
+  const now=new Date(), t0=new Date(now); t0.setHours(0,0,0,0);
+  const next=plans.filter(p=>new Date(p.when)>=now).sort(asc)[0];
+  let t='Nothing planned for Sunday yet.';
+  if(next){const d=new Date(next.when);d.setHours(0,0,0,0);const n=Math.round((d-t0)/864e5);
+    t=(n===0?'Tonight is date night':n===1?'Date night is tomorrow':n+' days until date night')+' at '+planName(next)+'.'}
+  $('#countdown').textContent=t;
+  const el=$('#nudge'), p=plans.find(p=>{const days=(new Date(p.when)-now)/864e5;return !p.sent&&days>=0&&days<=4.5});
+  el.hidden=!p;
+  if(p) el.innerHTML=`Time to tell her about Sunday at ${esc(planName(p))}.<button class="btn" data-send="${p.id}">Text it to her</button>`;
 }
+
+/* ---------- wishlist ---------- */
+function toggleWish(p){
+  if(inWish(p)) wish=wish.filter(w=>w.name!==p.name);
+  else{const {name,address,kind,lat,lon,website,rating,count,price}=p;wish.push({name,address,kind,lat,lon,website,rating,count,price})}
+  save('dn_wish',wish);
+}
+function renderWish(){
+  $('#wishlist').innerHTML=wish.length?wish.map((p,i)=>`<div class="plan"><b>${esc(p.name)}</b>${metaHTML(p)}
+    <div class="rowb" style="margin-top:12px"><button class="btn small" data-wplan="${i}">Plan this</button>
+    <a class="btn small gray" href="${esc(mapLink(p))}" target="_blank" rel="noopener">Photos</a>
+    <button class="btn small gray" data-wdel="${i}">Remove</button></div></div>`).join('')
+    :'<p class="status">Nothing saved yet. Tap "Save to wishlist" on any place you find.</p>';
+}
+
+/* ---------- dates and scrapbook ---------- */
+function renderDates(){
+  const now=Date.now(), up=plans.filter(p=>new Date(p.when)>=now).sort(asc), past=plans.filter(p=>new Date(p.when)<now).sort((a,b)=>asc(b,a));
+  let h='';
+  if(load('dn_dirty',false)) h+=`<div class="nudge">Your scrapbook has changes that aren't backed up.<button class="btn" data-act="backup">Back up now</button></div>`;
+  h+='<h2>Coming up</h2>'+(up.length?up.map(p=>{const d=new Date(p.when);return `<div class="plan"><span class="m">Date #${dateNo(p)}</span>
+    <b>${esc(planName(p))}</b><p>${esc(fmtDay(d)+', '+fmtTime(d))} · ${p.sent?'Sent to her':'Not sent yet'}</p>
+    <div class="rowb"><button class="btn small ${p.sent?'gray':''}" data-send="${p.id}">${p.sent?'Send again':'Text it to her'}</button>
+    <button class="btn small gray" data-cal="${p.id}">Calendar</button><button class="btn small gray" data-del="${p.id}">Delete</button></div></div>`}).join('')
+    :'<p class="status">Nothing planned yet. Head to Plan to set up Sunday.</p>');
+  h+='<h2>Scrapbook</h2>'+(past.length?`<button class="btn gray" data-act="review">${new Date().getFullYear()} in review</button>`+past.map(p=>{
+    const m=p.mem||{}, r=[m.me?'You '+stars(m.me):'',m.her?esc(settings.her||'Her')+' '+stars(m.her):''].filter(Boolean).join(' · ');
+    return `<div class="plan">${m.photo?`<img data-photo="${p.id}" alt="">`:''}<span class="m">Date #${dateNo(p)} · ${esc(fmtDay(new Date(p.when)))}</span>
+    <b>${esc(planName(p))}</b>${r?`<span class="m rate">${r}</span>`:''}<p class="quote">${esc(m.note||'')}</p>
+    <div class="rowb"><button class="btn small ${p.mem?'gray':''}" data-mem="${p.id}">${p.mem?'Edit memory':'Add memory'}</button>
+    <button class="btn small gray" data-del="${p.id}">Delete</button></div></div>`}).join('')
+    :'<p class="status">After each date, add a photo and a line about the night here.</p>');
+  $('#plans').innerHTML=h; fillPhotos();
+}
+
+async function openMem(id){
+  const p=byId(id), m=p.mem||{};
+  editing={id:p.id,me:m.me||0,her:m.her||0,photo:null};
+  let old=''; try{if(m.photo) old=await idb.get(p.id)||''}catch{}
+  const row=(who,label,n)=>`<div class="starrow"><span>${label}</span>${[1,2,3,4,5].map(k=>`<button data-star="${who}${k}" aria-label="${k} stars">${k<=n?'★':'☆'}</button>`).join('')}</div>`;
+  $('#sheetBody').innerHTML=`<h2 style="margin-top:0">Date #${dateNo(p)}: ${esc(planName(p))}</h2>
+    <img id="mPrev" class="prev" ${old?`src="${old}"`:'hidden'} alt="">
+    <label class="btn gray">Choose a photo<input type="file" accept="image/*" id="mFile" hidden></label>
+    <h2>How was it?</h2><div class="group" style="padding:6px 16px">${row('me','You',editing.me)}${row('her',esc(settings.her||'Her'),editing.her)}</div>
+    <h2>A line about the night</h2><textarea class="short" id="mNote">${esc(m.note||'')}</textarea>
+    <button class="btn" data-act="savemem">Save memory</button><button class="btn gray" data-act="close">Cancel</button>`;
+  $('#mFile').onchange=async e=>{const f=e.target.files[0]; if(!f) return;
+    try{editing.photo=await shrink(f);const i=$('#mPrev');i.src=editing.photo;i.hidden=false}catch{toast("Couldn't read that photo.")}};
+  $('#sheet').hidden=false;
+}
+
+async function saveMem(){
+  const p=byId(editing.id);
+  try{if(editing.photo) await idb.set(p.id,editing.photo)}catch{toast("Couldn't save the photo.");return}
+  p.mem={note:$('#mNote').value.trim(),me:editing.me,her:editing.her,photo:!!(editing.photo||p.mem?.photo)};
+  save('dn_plans',plans); save('dn_dirty',true); $('#sheet').hidden=true; renderDates(); toast('Memory saved');
+}
+
+function review(){
+  const y=new Date().getFullYear(), now=Date.now();
+  const list=plans.filter(p=>{const d=new Date(p.when);return d<now&&d.getFullYear()===y});
+  const score=p=>{const m=p.mem||{},n=(m.me?1:0)+(m.her?1:0);return n?((m.me||0)+(m.her||0))/n:0};
+  const rated=list.filter(p=>score(p)>0).sort((a,b)=>score(b)-score(a));
+  const avg=rated.length?(rated.reduce((s,p)=>s+score(p),0)/rated.length).toFixed(1):'';
+  const pics=list.filter(p=>p.mem?.photo);
+  $('#sheetBody').innerHTML=`<h2 style="margin-top:0">${y} in review</h2>`+(list.length?`
+    <p class="big">${list.length}</p><p class="sub">date night${list.length>1?'s':''} together${avg?`, rated ${avg} out of 5 on average`:''}.</p>
+    ${rated.length?'<h2>Your favourites</h2>'+rated.slice(0,3).map(p=>`<div class="plan"><b>${esc(planName(p))}</b>
+      <span class="m rate">${stars(Math.round(score(p)))}</span><p class="quote">${esc(p.mem.note||'')}</p></div>`).join(''):''}
+    ${pics.length?'<h2>The year in photos</h2><div class="grid">'+pics.map(p=>`<img data-photo="${p.id}" alt="">`).join('')+'</div>':''}`
+    :'<p class="status">No dates yet this year. Your first one will show up here.</p>')
+    +'<button class="btn gray" data-act="close">Close</button>';
+  $('#sheet').hidden=false; fillPhotos();
+}
+
+/* ---------- backup ---------- */
+async function backup(){
+  try{
+    const [keys,vals]=await idb.all(), photos={}; keys.forEach((k,i)=>photos[k]=vals[i]);
+    const f=new File([JSON.stringify({v:1,settings,plans,wish,favs,photos})],'date-night-backup.json',{type:'application/json'});
+    if(navigator.canShare&&navigator.canShare({files:[f]})) await navigator.share({files:[f]});
+    else{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click()}
+    save('dn_dirty',false); toast('Backup saved'); if(!$('#v-dates').hidden) renderDates();
+  }catch(e){if(e.name!=='AbortError') toast('Backup failed. Try again.')}
+}
+$('#restoreFile').onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{
+    const j=JSON.parse(await f.text());
+    if(!Array.isArray(j.plans)) throw 0;
+    if(!confirm('Replace everything in the app with this backup?')) return;
+    save('dn_settings',j.settings||settings); save('dn_plans',j.plans); save('dn_wish',j.wish||[]); save('dn_favs',j.favs||{});
+    for(const [k,v] of Object.entries(j.photos||{})) await idb.set(+k,v);
+    save('dn_dirty',false); location.reload();
+  }catch{toast("That file isn't a Date Night backup.")}
+};
 
 /* ---------- wiring ---------- */
 $('#chips').innerHTML=Object.keys(CATS).map(c=>`<button class="chip" aria-pressed="false">${c}</button>`).join('');
 $('#chips').onclick=e=>{const b=e.target.closest('.chip'); if(!b) return;
-  cat=cat===b.textContent?'':b.textContent;
-  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x.textContent===cat));
+  setCat(cat===b.textContent?'':b.textContent);
   if(cat&&$('#area').value.trim()) search();};
 $('#go').onclick=search;
+$('#more').onclick=more;
 for(const id of ['#q','#area']) $(id).onkeydown=e=>{if(e.key==='Enter'){e.target.blur();search()}};
 $('#nearme').onclick=()=>{
   if(!navigator.geolocation){status('Location is not available. Type a suburb instead.');return}
@@ -378,18 +621,48 @@ $('#nearme').onclick=()=>{
     $('#area').value='Near me'; status(''); if(cat||$('#q').value.trim()) search();
   },()=>status('Location is off for this app. Type a suburb instead.'));
 };
-$('#list').onclick=e=>{const b=e.target.closest('.res'); if(b) pick(results[+b.dataset.i])};
+$('#surprise').onclick=()=>{$('#surpriseOpts').hidden=!$('#surpriseOpts').hidden};
+$('#surWish').onclick=()=>{
+  if(!wish.length){toast('Your wishlist is empty. Save a few places first.');return}
+  const p=wish[rnd(wish.length)]; toast('How about '+p.name+'?'); pick({...p});
+};
+$('#surAny').onclick=async()=>{
+  const names=Object.keys(CATS); setCat(names[rnd(names.length)]); $('#q').value='';
+  if(await search()){const p=pool[rnd(Math.min(pool.length,8))]; toast('How about '+p.name+'?'); pick(p)}
+};
 $('#madd').onclick=()=>{const name=$('#mname').value.trim();
   if(!name){toast('Type the place name.');return}
   pick({name,address:$('#maddr').value.trim(),kind:''})};
-for(const id of ['#date','#time','#note','#movie']) $(id).oninput=draft;
+$('#addstop').onclick=()=>{addingStop=true;toast('Now search for the second stop and tap it.');scrollTo({top:0,behavior:'smooth'})};
+for(const id of ['#time','#time2','#note','#movie']) $(id).oninput=()=>{draft();if(id==='#time')weather()};
 $('#sendnow').onclick=()=>{const p=makePlan(); if(p) sendPlan(p)};
 $('#savelater').onclick=()=>{if(makePlan()){toast('Saved. Open the app when you want to send it.');show('dates')}};
+$('#cal').onclick=()=>{const p=makePlan(); if(p) openICS(p)};
+$$('[data-fav]').forEach(t=>{t.value=favs[t.dataset.fav]||'';t.oninput=()=>{favs[t.dataset.fav]=t.value;save('dn_favs',favs)}});
+
 document.body.addEventListener('click',e=>{
-  const s=e.target.closest('[data-send]'), d=e.target.closest('[data-del]'), t=e.target.closest('[data-tab]');
-  if(s){const p=plans.find(p=>p.id==s.dataset.send); if(p) sendPlan(p)}
-  if(d){plans=plans.filter(p=>p.id!=d.dataset.del); save('dn_plans',plans); renderPlans()}
-  if(t) show(t.dataset.tab);
+  const t=k=>e.target.closest('[data-'+k+']'); let el;
+  if(el=t('tab')) return show(el.dataset.tab);
+  if(el=t('i')) return pick(pool[+el.dataset.i]);
+  if(el=t('wish')){const p=pool[+el.dataset.wish];toggleWish(p);el.textContent=inWish(p)?'Saved to wishlist':'Save to wishlist';return}
+  if(el=t('wplan')){const p={...wish[+el.dataset.wplan]};show('plan');return pick(p)}
+  if(el=t('wdel')){wish.splice(+el.dataset.wdel,1);save('dn_wish',wish);return renderWish()}
+  if(el=t('sun')){which=+el.dataset.sun;renderSeg();draft();return weather()}
+  if(el=t('send')){const p=byId(el.dataset.send);return p&&sendPlan(p)}
+  if(el=t('cal')){const p=byId(el.dataset.cal);return p&&openICS(p)}
+  if(el=t('mem')) return openMem(el.dataset.mem);
+  if(el=t('del')){if(!confirm('Delete this date?')) return;
+    plans=plans.filter(p=>p.id!=el.dataset.del);save('dn_plans',plans);idb.del(+el.dataset.del).catch(()=>{});return renderDates()}
+  if(el=t('star')){const who=el.dataset.star.slice(0,-1), n=+el.dataset.star.slice(-1); editing[who]=n;
+    el.parentNode.querySelectorAll('button').forEach((b,i)=>b.textContent=i<n?'★':'☆');return}
+  if(el=t('act')){const a=el.dataset.act;
+    if(a==='backup') backup();
+    if(a==='review') review();
+    if(a==='close') $('#sheet').hidden=true;
+    if(a==='savemem') saveMem();
+    if(a==='shuffle'){tpl++;draft()}
+    if(a==='rm2'){e.preventDefault();stops.length=1;$('#time2').value='';renderPass();draft()}
+  }
 });
 $('#s-save').onclick=()=>{
   settings={her:$('#s-her').value.trim(),phone:$('#s-phone').value.trim(),area:$('#s-area').value.trim(),key:$('#s-key').value.trim()};
@@ -400,14 +673,13 @@ $('#s-save').onclick=()=>{
 /* ---------- start-up ---------- */
 $('#s-her').value=settings.her; $('#s-phone').value=settings.phone; $('#s-area').value=settings.area; $('#s-key').value=settings.key;
 $('#area').value=settings.area;
-{const d=new Date(); d.setDate(d.getDate()+((7-d.getDay())%7||7));           // next Sunday
- $('#date').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+renderSeg();
 {const c=document.createElement('canvas'); c.width=c.height=180; const x=c.getContext('2d');   // home screen icon
  const g=x.createLinearGradient(0,0,0,180); g.addColorStop(0,'#ff5e7e'); g.addColorStop(1,'#ff2d55');
  x.fillStyle=g; x.fillRect(0,0,180,180); x.fillStyle='#fff'; x.font='110px serif';
  x.textAlign='center'; x.textBaseline='middle'; x.fillText('♥',90,98);
  const l=document.createElement('link'); l.rel='apple-touch-icon'; l.href=c.toDataURL(); document.head.appendChild(l)}
-renderNudge();
+renderTop();
 if(!settings.phone) show('settings');
 </script>
 </body>
