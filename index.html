@@ -219,7 +219,7 @@ nav button[aria-current=page]{color:var(--tint);background:var(--fill)}
 </nav>
 <div id="sheet" hidden><div class="sheet-card" id="sheetBody"></div></div>
 <div id="toast" hidden></div>
-  <script>
+<script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s), enc=encodeURIComponent;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
