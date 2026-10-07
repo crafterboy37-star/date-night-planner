@@ -219,3 +219,464 @@ nav button[aria-current=page]{color:var(--tint);background:var(--fill)}
 </nav>
 <div id="sheet" hidden><div class="sheet-card" id="sheetBody"></div></div>
 <div id="toast" hidden></div>
+  <script>
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s), enc=encodeURIComponent;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const cap=s=>s?s[0].toUpperCase()+s.slice(1):'';
+const pad=n=>String(n).padStart(2,'0');
+const rnd=n=>Math.floor(Math.random()*n);
+
+let settings=Object.assign({her:'Jessica',phone:'',area:'',key:''},load('dn_settings',{}));
+let plans=load('dn_plans',[]), wish=load('dn_wish',[]), favs=load('dn_favs',{});
+let cat='', pool=[], shown=0, gToken='', lastQuery=null;
+let stops=[], addingStop=false, which=0, tpl=0, draftId=null, editing=null;
+const centers={};
+
+const CATS={
+  Dinner:['restaurant',['["amenity"="restaurant"]']],
+  Drinks:['bar',['["amenity"~"^(bar|pub|biergarten)$"]']],
+  Coffee:['cafe',['["amenity"="cafe"]']],
+  Dessert:['dessert',['["amenity"="ice_cream"]','["cuisine"~"dessert|ice_cream|cake|donut|chocolate",i]']],
+  Movies:['cinema',['["amenity"="cinema"]']],
+  Fun:['fun things to do',['["leisure"~"^(bowling_alley|miniature_golf|escape_game|amusement_arcade|trampoline_park|ice_rink)$"]',
+       '["tourism"~"^(museum|gallery|zoo|aquarium|theme_park)$"]','["amenity"~"^(theatre|arts_centre)$"]']],
+  Outdoors:['parks and lookouts',['["leisure"~"^(park|garden|nature_reserve)$"]','["tourism"~"^(viewpoint|picnic_site)$"]','["natural"="beach"]']]
+};
+const PRICE={PRICE_LEVEL_INEXPENSIVE:'$',PRICE_LEVEL_MODERATE:'$$',PRICE_LEVEL_EXPENSIVE:'$$$',PRICE_LEVEL_VERY_EXPENSIVE:'$$$$'};
+
+/* ---------- photo storage (kept on this phone) ---------- */
+const idb=(()=>{let p;
+  const db=()=>p||(p=new Promise((res,rej)=>{const r=indexedDB.open('datenight',1);
+    r.onupgradeneeded=()=>r.result.createObjectStore('photos');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
+  const tx=(mode,f)=>db().then(d=>new Promise((res,rej)=>{const q=f(d.transaction('photos',mode).objectStore('photos'));
+    q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)}));
+  return{get:k=>tx('readonly',s=>s.get(k)),set:(k,v)=>tx('readwrite',s=>s.put(v,k)),del:k=>tx('readwrite',s=>s.delete(k)),
+    all:()=>Promise.all([tx('readonly',s=>s.getAllKeys()),tx('readonly',s=>s.getAll())])}})();
+function fillPhotos(){$$('img[data-photo]').forEach(img=>idb.get(+img.dataset.photo).then(v=>{if(v)img.src=v}).catch(()=>{}))}
+function shrink(file){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);
+  img.onload=()=>{const k=Math.min(1,1100/Math.max(img.width,img.height)),c=document.createElement('canvas');
+    c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.72))};
+  img.onerror=rej;img.src=u})}
+
+/* ---------- small helpers ---------- */
+let toastTimer;
+function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,2800)}
+function status(t){$('#status').textContent=t}
+function show(tab){
+  for(const v of ['plan','wish','dates','her','settings']) $('#v-'+v).hidden=v!==tab;
+  $$('nav button').forEach(b=>b.dataset.tab===tab?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
+  if(tab==='dates') renderDates();
+  if(tab==='wish') renderWish();
+  if(tab==='plan') renderTop();
+  if(tab==='her') $('#herTitle').textContent=settings.her?settings.her+"'s Favourites":'Her Favourites';
+  scrollTo(0,0);
+}
+function km(a,b){const R=6371,r=x=>x*Math.PI/180,dLa=r(b.lat-a.lat),dLo=r(b.lon-a.lon);
+  const h=Math.sin(dLa/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function mapLink(p){return p.lat?`https://maps.apple.com/?q=${enc(p.name)}&ll=${(+p.lat).toFixed(5)},${(+p.lon).toFixed(5)}`
+  :`https://maps.apple.com/?q=${enc((p.name+' '+(p.address||'')).trim())}`}
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+function sunday(w){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+(7-d.getDay())%7+7*w);return d}
+function when(){const d=new Date(iso(sunday(which))+'T'+($('#time').value||'18:30'));return isNaN(d)?null:d}
+function t12(v){if(!v)return'';const[h,m]=v.split(':').map(Number);return `${h%12||12}${m?':'+pad(m):''}${h<12?'am':'pm'}`}
+const fmtTime=d=>t12(d.getHours()+':'+d.getMinutes());
+const fmtDay=d=>d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'});
+const ord=n=>n+(n%10==1&&n!=11?'st':n%10==2&&n!=12?'nd':n%10==3&&n!=13?'rd':'th');
+const asc=(a,b)=>new Date(a.when)-new Date(b.when);
+const byId=id=>plans.find(p=>p.id==id);
+const planStops=p=>p.stops||[{name:p.name||'Date night'}];
+const planName=p=>planStops(p).map(s=>s.name).join(' then ');
+const dateNo=p=>[...plans].sort(asc).findIndex(x=>x.id===p.id)+1;
+const stars=n=>'★'.repeat(n)+'☆'.repeat(5-n);
+const isCinema=p=>/cinema|movie/i.test(p.kind||'');
+const inWish=p=>wish.some(w=>w.name===p.name);
+function metaHTML(p){
+  const a=[];
+  if(p.rating) a.push(`<span class="rate">★ ${(+p.rating).toFixed(1)}</span>${p.count?' ('+(+p.count).toLocaleString()+')':''}`);
+  if(p.price) a.push(esc(p.price));
+  if(p.kind) a.push(esc(cap(p.kind)));
+  const b=[p.address,p.km!=null?p.km.toFixed(1)+' km':'',p.open===true?'Open now':p.open===false?'Closed now':''].filter(Boolean).map(esc);
+  return (a.length?`<span class="m">${a.join(' · ')}</span>`:'')+(b.length?`<span class="m">${b.join(' · ')}</span>`:'');
+}
+
+/* ---------- search ---------- */
+async function getCenter(){
+  const area=$('#area').value.trim();
+  if(!area) throw new Error('Type a suburb or city, or tap Near me.');
+  if(centers[area]) return centers[area];
+  const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q='+enc(area));
+  const j=await r.json();
+  if(!j.length) throw new Error(`Couldn't find "${area}". Check the spelling or add the city.`);
+  return centers[area]={lat:+j[0].lat,lon:+j[0].lon};
+}
+
+async function searchGoogle(c,text,token){
+  const body={textQuery:text,pageSize:8,locationBias:{circle:{center:{latitude:c.lat,longitude:c.lon},radius:6000}}};
+  if(token) body.pageToken=token;
+  const r=await fetch('https://places.googleapis.com/v1/places:searchText',{method:'POST',
+    headers:{'Content-Type':'application/json','X-Goog-Api-Key':settings.key,
+      'X-Goog-FieldMask':'nextPageToken,places.displayName,places.shortFormattedAddress,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.priceLevel,places.photos,places.primaryTypeDisplayName,places.websiteUri,places.currentOpeningHours.openNow'},
+    body:JSON.stringify(body)});
+  const j=await r.json();
+  if(!r.ok) throw new Error('Google key problem: '+(j.error?.message||'request refused')+' Check the key in Settings.');
+  return {next:j.nextPageToken||'',items:(j.places||[]).map(p=>{
+    const lat=p.location?.latitude, lon=p.location?.longitude;
+    return {name:p.displayName?.text||'Unnamed place', address:p.shortFormattedAddress||p.formattedAddress||'',
+      kind:p.primaryTypeDisplayName?.text||'', lat, lon, km:lat?km(c,{lat,lon}):null,
+      rating:p.rating, count:p.userRatingCount, price:PRICE[p.priceLevel]||'', open:p.currentOpeningHours?.openNow,
+      website:p.websiteUri||'',
+      photo:p.photos?.[0]?`https://places.googleapis.com/v1/${p.photos[0].name}/media?maxWidthPx=600&key=${enc(settings.key)}`:''};
+  })};
+}
+
+async function searchOSM(c,raw){
+  const kw=raw.replace(/["\\\[\]()]/g,'').replace(/\s+/g,'.*'), a=`(around:4000,${c.lat},${c.lon})`;
+  const body=cat
+    ? CATS[cat][1].map(f=>`nwr${a}["name"]${f}${kw?`[~"^(name|cuisine)$"~"${kw}",i]`:''};`).join('')
+    : `nwr${a}["name"][~"^(amenity|leisure|tourism)$"~"."][~"^(name|cuisine|amenity|leisure|tourism|sport)$"~"${kw}",i];`;
+  const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',
+    body:new URLSearchParams({data:`[out:json][timeout:25];(${body});out center 250;`})});
+  if(!r.ok) throw new Error('The search service is busy. Try again in a moment.');
+  const j=await r.json(), seen=new Set();
+  return j.elements.map(e=>{
+    const t=e.tags||{}, lat=e.lat??e.center?.lat, lon=e.lon??e.center?.lon;
+    return {name:t.name, lat, lon, website:t.website||t['contact:website']||'',
+      kind:(t.cuisine||t.amenity||t.leisure||t.tourism||'').split(';')[0].replace(/_/g,' '),
+      address:[[t['addr:housenumber'],t['addr:street']].filter(Boolean).join(' '),t['addr:suburb']||t['addr:city']].filter(Boolean).join(', '),
+      km:lat?km(c,{lat,lon}):99};
+  }).filter(p=>p.lat).sort((x,y)=>x.km-y.km).filter(p=>{
+    const k=p.name+p.km.toFixed(1); if(seen.has(k)) return false; seen.add(k); return true;
+  }).slice(0,60);
+}
+
+const rowHTML=(p,i)=>`<div class="res"><button class="resmain" data-i="${i}">
+  ${p.photo?`<img src="${esc(p.photo)}" alt="" loading="lazy">`:''}
+  <span class="info"><b>${esc(p.name)}</b>${metaHTML(p)}</span></button>
+  <div class="acts"><a href="${esc(mapLink(p))}" target="_blank" rel="noopener">Photos and reviews</a>
+  <button data-wish="${i}">${inWish(p)?'Saved to wishlist':'Save to wishlist'}</button></div></div>`;
+
+function renderList(from){
+  const html=pool.slice(from,shown).map((p,k)=>rowHTML(p,from+k)).join('');
+  if(from) $('#list').insertAdjacentHTML('beforeend',html); else $('#list').innerHTML=html;
+  status(`Showing ${shown} places. Tap one to pick it.`);
+  $('#more').hidden=!(shown<pool.length||gToken);
+  $('#src').textContent='Results from '+(settings.key?'Google':'OpenStreetMap');
+}
+
+async function search(){
+  const raw=$('#q').value.trim();
+  if(!raw&&!cat){status('Pick a category or type what you feel like.');return false}
+  $('#list').innerHTML='';$('#more').hidden=true;$('#src').textContent='';status('Searching…');
+  try{
+    const c=await getCenter();
+    if(settings.key){
+      const area=$('#area').value.trim();
+      const text=[raw,cat?CATS[cat][0]:''].filter(Boolean).join(' ')+(area&&area!=='Near me'?' in '+area:'');
+      lastQuery={c,text};
+      const r=await searchGoogle(c,text); pool=r.items; gToken=r.next;
+    }else{pool=await searchOSM(c,raw); gToken=''}
+    if(!pool.length){status('Nothing found. Try a different word, a nearby suburb, or add the place yourself below.');return false}
+    shown=Math.min(8,pool.length); renderList(0); return true;
+  }catch(e){status(e.message||'Search failed. Check your connection and try again.');return false}
+}
+
+async function more(){
+  const from=shown;
+  if(shown<pool.length){shown=Math.min(shown+8,pool.length);renderList(from);return}
+  if(!gToken) return;
+  try{const r=await searchGoogle(lastQuery.c,lastQuery.text,gToken);
+    pool=pool.concat(r.items);gToken=r.next;shown=pool.length;renderList(from)}
+  catch(e){status(e.message)}
+}
+
+function setCat(c){cat=c;$$('.chip').forEach(x=>x.setAttribute('aria-pressed',x.textContent===cat))}
+
+/* ---------- picked places ---------- */
+function pick(p){
+  if(addingStop&&stops.length) stops[1]=p; else{stops=[p];draftId=null}
+  addingStop=false; renderPass(); $('#step2').hidden=false; draft(); weather();
+  $('#step2').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderPass(){
+  const two=stops.length>1;
+  $('#pass').innerHTML=(stops[0].photo?`<img src="${esc(stops[0].photo)}" alt="">`:'')+stops.map((s,i)=>`<div class="pass-body">
+    ${two?`<span class="m">${i?'Then':'First'}</span>`:''}<p class="pass-name">${esc(s.name)}</p>${metaHTML(s)}
+    <span class="m"><a href="${esc(mapLink(s))}" target="_blank" rel="noopener">Photos and reviews</a>${i?' · <a href="#" data-act="rm2">Remove</a>':''}</span></div>`).join('')
+    +'<div class="pass-when" id="passwhen"></div>';
+  $('#addstop').hidden=two; $('#t2row').hidden=!two;
+  const cin=stops.find(isCinema);
+  $('#movieGroup').hidden=!cin;
+  if(cin) $('#sessions').href=cin.website||`https://www.google.com/search?q=${enc(cin.name+' session times')}`;
+  else $('#movie').value='';
+}
+
+function renderSeg(){
+  $('#sun').innerHTML=[0,1].map(w=>`<button data-sun="${w}" aria-pressed="${w===which}">${w?'Next':'This'} Sunday
+    <small>${sunday(w).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</small></button>`).join('');
+}
+
+function draft(){
+  if(!stops.length) return;
+  const d=when();
+  $('#passwhen').textContent=d?fmtDay(d)+', '+fmtTime(d):'Pick a time';
+  if(!d) return;
+  const hi=settings.her?'Hey '+settings.her:'Hey you', D=which?'Sunday the '+ord(d.getDate()):'Sunday';
+  const P=stops[0].name, T=fmtTime(d), movie=$('#movie').value.trim(), n=$('#note').value.trim(), t2=t12($('#time2').value);
+  let x='';
+  if(movie) x+=` We're seeing ${movie}.`;
+  if(stops[1]) x+=` Then ${stops[1].name}${t2?' at '+t2:''} after.`;
+  const all=[
+    `${hi} 💕 ${D} is sorted. I'm taking you to ${P} at ${T}.${x} Can't wait.`,
+    `${hi}, keep ${D} free ✨ We're going to ${P} at ${T}.${x} I've been looking forward to this all week.`,
+    `Date night plans are in 🥂 ${D}, ${T}, ${P}.${x} Just bring yourself.`,
+    `${hi} ❤️ ${D} it's you, me and ${P} at ${T}.${x} Counting down already.`,
+    `${D} can't come soon enough 😊 ${P} at ${T}.${x} See you then, gorgeous.`];
+  $('#msg').value=all[tpl%all.length]+(n?'\n\n'+n:'');
+}
+
+let wxTimer;
+function weather(){
+  clearTimeout(wxTimer);
+  wxTimer=setTimeout(async()=>{
+    const s=stops[0], d=when(), el=$('#wx'); el.textContent='';
+    if(!s||!s.lat||!d||(d-Date.now())/864e5>15) return;
+    try{
+      const day=iso(d);
+      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${s.lat}&longitude=${s.lon}&hourly=temperature_2m,precipitation_probability,weather_code&timezone=auto&start_date=${day}&end_date=${day}`);
+      const h=(await r.json()).hourly, i=d.getHours();
+      if(!h||h.temperature_2m[i]==null) return;
+      const c=h.weather_code[i], word=c===0?'Clear':c<4?'Partly cloudy':c<50?'Foggy':c<70?'Rain':c<80?'Snow':c<95?'Showers':'Storms';
+      el.textContent=`Forecast for Sunday ${fmtTime(d)}: ${word}, ${Math.round(h.temperature_2m[i])}°, ${h.precipitation_probability[i]??0}% chance of rain.`;
+    }catch{}
+  },400);
+}
+
+/* ---------- saving and sending ---------- */
+function makePlan(){
+  const d=when();
+  if(!stops.length){toast('Pick a place first.');return null}
+  if(!d){toast('Set the time.');return null}
+  const p={id:draftId||Date.now(),when:iso(sunday(which))+'T'+($('#time').value||'18:30'),
+    stops:stops.map(({name,address,kind,lat,lon})=>({name,address,kind,lat,lon})),msg:$('#msg').value,sent:false};
+  const i=plans.findIndex(x=>x.id===p.id);
+  if(i>=0){p.sent=plans[i].sent;p.mem=plans[i].mem;plans[i]=p}else plans.push(p);
+  draftId=p.id; save('dn_plans',plans); return p;
+}
+
+function sendPlan(p){
+  const num=(settings.phone||'').replace(/[^\d+]/g,'');
+  if(!num){toast('Add her mobile number first.');show('settings');$('#s-phone').focus();return}
+  p.sent=true; save('dn_plans',plans);
+  location.href=`sms:${num}?&body=${enc(p.msg)}`;
+}
+
+function openICS(p){
+  const f=d=>`${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+  const x=s=>String(s||'').replace(/([,;\\])/g,'\\$1');
+  const s=new Date(p.when), w=new Date(s); w.setDate(w.getDate()-4); w.setHours(18,0,0,0);
+  const ev=(uid,st,mins,sum,loc,trig)=>['BEGIN:VEVENT',`UID:${uid}@datenight`,`DTSTAMP:${f(new Date())}Z`,`DTSTART:${f(st)}`,
+    `DTEND:${f(new Date(+st+mins*6e4))}`,`SUMMARY:${x(sum)}`,...(loc?[`LOCATION:${x(loc)}`]:[]),
+    'BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${x(sum)}`,`TRIGGER:${trig}`,'END:VALARM','END:VEVENT'];
+  const a=planStops(p)[0];
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Date Night//EN',
+    ...ev(p.id,s,120,'Date night: '+planName(p),[a.name,a.address].filter(Boolean).join(', '),'-PT2H'),
+    ...(w>new Date()?ev(p.id+'w',w,15,'Send the date night message','','PT0M'):[]),'END:VCALENDAR'];
+  const url='data:text/calendar;charset=utf-8,'+enc(lines.join('\r\n'));
+  if(!window.open(url,'_blank')){const l=document.createElement('a');l.href=url;l.download='date-night.ics';l.click()}
+}
+
+/* ---------- top of the Plan tab ---------- */
+function renderTop(){
+  const now=new Date(), t0=new Date(now); t0.setHours(0,0,0,0);
+  const hr=now.getHours();
+  $('#hello').textContent=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  $('#title').textContent=settings.her?'Date nights with '+settings.her:'Date nights';
+  const next=plans.filter(p=>new Date(p.when)>=now).sort(asc)[0];
+  let t="Nothing planned for Sunday yet. Let's fix that.";
+  if(next){const d=new Date(next.when);d.setHours(0,0,0,0);const n=Math.round((d-t0)/864e5);
+    t=(n===0?'Tonight is date night':n===1?'Date night is tomorrow':n+' days until date night')+' at '+planName(next)+'.'}
+  $('#countdown').textContent=t;
+  const el=$('#nudge'), p=plans.find(p=>{const days=(new Date(p.when)-now)/864e5;return !p.sent&&days>=0&&days<=4.5});
+  el.hidden=!p;
+  if(p) el.innerHTML=`Time to tell ${esc(settings.her||'her')} about Sunday at ${esc(planName(p))}.<button class="btn" data-send="${p.id}">Text it to her</button>`;
+}
+
+/* ---------- wishlist ---------- */
+function toggleWish(p){
+  if(inWish(p)) wish=wish.filter(w=>w.name!==p.name);
+  else{const {name,address,kind,lat,lon,website,rating,count,price}=p;wish.push({name,address,kind,lat,lon,website,rating,count,price})}
+  save('dn_wish',wish);
+}
+function renderWish(){
+  $('#wishlist').innerHTML=wish.length?wish.map((p,i)=>`<div class="plan"><b>${esc(p.name)}</b>${metaHTML(p)}
+    <div class="rowb" style="margin-top:12px"><button class="btn small" data-wplan="${i}">Plan this</button>
+    <a class="btn small gray" href="${esc(mapLink(p))}" target="_blank" rel="noopener">Photos</a>
+    <button class="btn small gray" data-wdel="${i}">Remove</button></div></div>`).join('')
+    :'<p class="status">Nothing saved yet. Tap "Save to wishlist" on any place you find.</p>';
+}
+
+/* ---------- dates and scrapbook ---------- */
+function renderDates(){
+  const now=Date.now(), up=plans.filter(p=>new Date(p.when)>=now).sort(asc), past=plans.filter(p=>new Date(p.when)<now).sort((a,b)=>asc(b,a));
+  let h='';
+  if(load('dn_dirty',false)) h+=`<div class="nudge">Your scrapbook has changes that aren't backed up.<button class="btn" data-act="backup">Back up now</button></div>`;
+  h+='<h2>Coming up</h2>'+(up.length?up.map(p=>{const d=new Date(p.when);return `<div class="plan"><span class="m">Date #${dateNo(p)}</span>
+    <b>${esc(planName(p))}</b><p>${esc(fmtDay(d)+', '+fmtTime(d))} · ${p.sent?'Sent to her':'Not sent yet'}</p>
+    <div class="rowb"><button class="btn small ${p.sent?'gray':''}" data-send="${p.id}">${p.sent?'Send again':'Text it to her'}</button>
+    <button class="btn small gray" data-cal="${p.id}">Calendar</button><button class="btn small gray" data-del="${p.id}">Delete</button></div></div>`}).join('')
+    :'<p class="status">Nothing planned yet. Head to Plan to set up Sunday.</p>');
+  h+='<h2>Scrapbook</h2>'+(past.length?`<button class="btn gray" data-act="review">${new Date().getFullYear()} in review</button>`+past.map(p=>{
+    const m=p.mem||{}, r=[m.me?'You '+stars(m.me):'',m.her?esc(settings.her||'Her')+' '+stars(m.her):''].filter(Boolean).join(' · ');
+    return `<div class="plan">${m.photo?`<img data-photo="${p.id}" alt="">`:''}<span class="m">Date #${dateNo(p)} · ${esc(fmtDay(new Date(p.when)))}</span>
+    <b>${esc(planName(p))}</b>${r?`<span class="m rate">${r}</span>`:''}<p class="quote">${esc(m.note||'')}</p>
+    <div class="rowb"><button class="btn small ${p.mem?'gray':''}" data-mem="${p.id}">${p.mem?'Edit memory':'Add memory'}</button>
+    <button class="btn small gray" data-del="${p.id}">Delete</button></div></div>`}).join('')
+    :'<p class="status">After each date, add a photo and a line about the night here.</p>');
+  $('#plans').innerHTML=h; fillPhotos();
+}
+
+async function openMem(id){
+  const p=byId(id), m=p.mem||{};
+  editing={id:p.id,me:m.me||0,her:m.her||0,photo:null};
+  let old=''; try{if(m.photo) old=await idb.get(p.id)||''}catch{}
+  const row=(who,label,n)=>`<div class="starrow"><span>${label}</span>${[1,2,3,4,5].map(k=>`<button data-star="${who}${k}" aria-label="${k} stars">${k<=n?'★':'☆'}</button>`).join('')}</div>`;
+  $('#sheetBody').innerHTML=`<h2 style="margin-top:0">Date #${dateNo(p)}: ${esc(planName(p))}</h2>
+    <img id="mPrev" class="prev" ${old?`src="${old}"`:'hidden'} alt="">
+    <label class="btn gray">Choose a photo<input type="file" accept="image/*" id="mFile" hidden></label>
+    <h2>How was it?</h2><div class="group" style="padding:6px 16px">${row('me','You',editing.me)}${row('her',esc(settings.her||'Her'),editing.her)}</div>
+    <h2>A line about the night</h2><textarea class="short" id="mNote">${esc(m.note||'')}</textarea>
+    <button class="btn" data-act="savemem">Save memory</button><button class="btn gray" data-act="close">Cancel</button>`;
+  $('#mFile').onchange=async e=>{const f=e.target.files[0]; if(!f) return;
+    try{editing.photo=await shrink(f);const i=$('#mPrev');i.src=editing.photo;i.hidden=false}catch{toast("Couldn't read that photo.")}};
+  $('#sheet').hidden=false;
+}
+
+async function saveMem(){
+  const p=byId(editing.id);
+  try{if(editing.photo) await idb.set(p.id,editing.photo)}catch{toast("Couldn't save the photo.");return}
+  p.mem={note:$('#mNote').value.trim(),me:editing.me,her:editing.her,photo:!!(editing.photo||p.mem?.photo)};
+  save('dn_plans',plans); save('dn_dirty',true); $('#sheet').hidden=true; renderDates(); toast('Memory saved');
+}
+
+function review(){
+  const y=new Date().getFullYear(), now=Date.now();
+  const list=plans.filter(p=>{const d=new Date(p.when);return d<now&&d.getFullYear()===y});
+  const score=p=>{const m=p.mem||{},n=(m.me?1:0)+(m.her?1:0);return n?((m.me||0)+(m.her||0))/n:0};
+  const rated=list.filter(p=>score(p)>0).sort((a,b)=>score(b)-score(a));
+  const avg=rated.length?(rated.reduce((s,p)=>s+score(p),0)/rated.length).toFixed(1):'';
+  const pics=list.filter(p=>p.mem?.photo);
+  $('#sheetBody').innerHTML=`<h2 style="margin-top:0">${y} in review</h2>`+(list.length?`
+    <p class="big">${list.length}</p><p class="sub">date night${list.length>1?'s':''} together${avg?`, rated ${avg} out of 5 on average`:''}.</p>
+    ${rated.length?'<h2>Your favourites</h2>'+rated.slice(0,3).map(p=>`<div class="plan"><b>${esc(planName(p))}</b>
+      <span class="m rate">${stars(Math.round(score(p)))}</span><p class="quote">${esc(p.mem.note||'')}</p></div>`).join(''):''}
+    ${pics.length?'<h2>The year in photos</h2><div class="grid">'+pics.map(p=>`<img data-photo="${p.id}" alt="">`).join('')+'</div>':''}`
+    :'<p class="status">No dates yet this year. Your first one will show up here.</p>')
+    +'<button class="btn gray" data-act="close">Close</button>';
+  $('#sheet').hidden=false; fillPhotos();
+}
+
+/* ---------- backup ---------- */
+async function backup(){
+  try{
+    const [keys,vals]=await idb.all(), photos={}; keys.forEach((k,i)=>photos[k]=vals[i]);
+    const f=new File([JSON.stringify({v:1,settings,plans,wish,favs,photos})],'date-night-backup.json',{type:'application/json'});
+    if(navigator.canShare&&navigator.canShare({files:[f]})) await navigator.share({files:[f]});
+    else{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click()}
+    save('dn_dirty',false); toast('Backup saved'); if(!$('#v-dates').hidden) renderDates();
+  }catch(e){if(e.name!=='AbortError') toast('Backup failed. Try again.')}
+}
+$('#restoreFile').onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{
+    const j=JSON.parse(await f.text());
+    if(!Array.isArray(j.plans)) throw 0;
+    if(!confirm('Replace everything in the app with this backup?')) return;
+    save('dn_settings',j.settings||settings); save('dn_plans',j.plans); save('dn_wish',j.wish||[]); save('dn_favs',j.favs||{});
+    for(const [k,v] of Object.entries(j.photos||{})) await idb.set(+k,v);
+    save('dn_dirty',false); location.reload();
+  }catch{toast("That file isn't a Date Night backup.")}
+};
+
+/* ---------- wiring ---------- */
+$('#chips').innerHTML=Object.keys(CATS).map(c=>`<button class="chip" aria-pressed="false">${c}</button>`).join('');
+$('#chips').onclick=e=>{const b=e.target.closest('.chip'); if(!b) return;
+  setCat(cat===b.textContent?'':b.textContent);
+  if(cat&&$('#area').value.trim()) search();};
+$('#go').onclick=search;
+$('#more').onclick=more;
+for(const id of ['#q','#area']) $(id).onkeydown=e=>{if(e.key==='Enter'){e.target.blur();search()}};
+$('#nearme').onclick=()=>{
+  if(!navigator.geolocation){status('Location is not available. Type a suburb instead.');return}
+  status('Finding you…');
+  navigator.geolocation.getCurrentPosition(p=>{
+    centers['Near me']={lat:p.coords.latitude,lon:p.coords.longitude};
+    $('#area').value='Near me'; status(''); if(cat||$('#q').value.trim()) search();
+  },()=>status('Location is off for this app. Type a suburb instead.'));
+};
+$('#surprise').onclick=()=>{$('#surpriseOpts').hidden=!$('#surpriseOpts').hidden};
+$('#surWish').onclick=()=>{
+  if(!wish.length){toast('Your wishlist is empty. Save a few places first.');return}
+  const p=wish[rnd(wish.length)]; toast('How about '+p.name+'?'); pick({...p});
+};
+$('#surAny').onclick=async()=>{
+  const names=Object.keys(CATS); setCat(names[rnd(names.length)]); $('#q').value='';
+  if(await search()){const p=pool[rnd(Math.min(pool.length,8))]; toast('How about '+p.name+'?'); pick(p)}
+};
+$('#madd').onclick=()=>{const name=$('#mname').value.trim();
+  if(!name){toast('Type the place name.');return}
+  pick({name,address:$('#maddr').value.trim(),kind:''})};
+$('#addstop').onclick=()=>{addingStop=true;toast('Now search for the second stop and tap it.');scrollTo({top:0,behavior:'smooth'})};
+for(const id of ['#time','#time2','#note','#movie']) $(id).oninput=()=>{draft();if(id==='#time')weather()};
+$('#sendnow').onclick=()=>{const p=makePlan(); if(p) sendPlan(p)};
+$('#savelater').onclick=()=>{if(makePlan()){toast('Saved. Open the app when you want to send it.');show('dates')}};
+$('#cal').onclick=()=>{const p=makePlan(); if(p) openICS(p)};
+$$('[data-fav]').forEach(t=>{t.value=favs[t.dataset.fav]||'';t.oninput=()=>{favs[t.dataset.fav]=t.value;save('dn_favs',favs)}});
+
+document.body.addEventListener('click',e=>{
+  const t=k=>e.target.closest('[data-'+k+']'); let el;
+  if(el=t('tab')) return show(el.dataset.tab);
+  if(el=t('i')) return pick(pool[+el.dataset.i]);
+  if(el=t('wish')){const p=pool[+el.dataset.wish];toggleWish(p);el.textContent=inWish(p)?'Saved to wishlist':'Save to wishlist';return}
+  if(el=t('wplan')){const p={...wish[+el.dataset.wplan]};show('plan');return pick(p)}
+  if(el=t('wdel')){wish.splice(+el.dataset.wdel,1);save('dn_wish',wish);return renderWish()}
+  if(el=t('sun')){which=+el.dataset.sun;renderSeg();draft();return weather()}
+  if(el=t('send')){const p=byId(el.dataset.send);return p&&sendPlan(p)}
+  if(el=t('cal')){const p=byId(el.dataset.cal);return p&&openICS(p)}
+  if(el=t('mem')) return openMem(el.dataset.mem);
+  if(el=t('del')){if(!confirm('Delete this date?')) return;
+    plans=plans.filter(p=>p.id!=el.dataset.del);save('dn_plans',plans);idb.del(+el.dataset.del).catch(()=>{});return renderDates()}
+  if(el=t('star')){const who=el.dataset.star.slice(0,-1), n=+el.dataset.star.slice(-1); editing[who]=n;
+    el.parentNode.querySelectorAll('button').forEach((b,i)=>b.textContent=i<n?'★':'☆');return}
+  if(el=t('act')){const a=el.dataset.act;
+    if(a==='backup') backup();
+    if(a==='review') review();
+    if(a==='close') $('#sheet').hidden=true;
+    if(a==='savemem') saveMem();
+    if(a==='shuffle'){tpl++;draft()}
+    if(a==='rm2'){e.preventDefault();stops.length=1;$('#time2').value='';renderPass();draft()}
+  }
+});
+$('#s-save').onclick=()=>{
+  settings={her:$('#s-her').value.trim(),phone:$('#s-phone').value.trim(),area:$('#s-area').value.trim(),key:$('#s-key').value.trim()};
+  save('dn_settings',settings); if(!$('#area').value) $('#area').value=settings.area;
+  draft(); toast('Settings saved'); show('plan');
+};
+
+/* ---------- start-up ---------- */
+$('#s-her').value=settings.her; $('#s-phone').value=settings.phone; $('#s-area').value=settings.area; $('#s-key').value=settings.key;
+$('#area').value=settings.area;
+renderSeg();
+{const c=document.createElement('canvas'); c.width=c.height=180; const x=c.getContext('2d');   // sunshine home screen icon
+ const g=x.createLinearGradient(0,0,0,180); g.addColorStop(0,'#fbf3e2'); g.addColorStop(1,'#efdcb8');
+ x.fillStyle=g; x.fillRect(0,0,180,180); x.font='112px -apple-system, sans-serif';
+ x.textAlign='center'; x.textBaseline='middle'; x.fillText('☀️',90,98);
+ const l=document.createElement('link'); l.rel='apple-touch-icon'; l.href=c.toDataURL(); document.head.appendChild(l)}
+renderTop();
+if(!settings.phone) show('settings');
+</script>
+</body>
+</html>
