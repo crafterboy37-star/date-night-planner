@@ -6,136 +6,175 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Date Night">
-<meta name="theme-color" content="#ece8f3">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Date Night</title>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#ece8f3;--ink:#2b1b3d;--soft:#6d5f80;--card:#fff;--line:#d6cde4;--rose:#d63a72;--gold:#f6c453}
+:root{color-scheme:light dark;--bg:#f2f2f7;--card:#fff;--ink:#000;--soft:rgba(60,60,67,.62);
+  --line:rgba(60,60,67,.18);--fill:rgba(118,118,128,.12);--tint:#ff2d55;--glass:rgba(255,255,255,.74)}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--card:#1c1c1e;--ink:#fff;--soft:rgba(235,235,245,.62);
+  --line:rgba(84,84,88,.6);--fill:rgba(118,118,128,.24);--tint:#ff375f;--glass:rgba(38,38,40,.74)}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 body{margin:0 auto;max-width:520px;background:var(--bg);color:var(--ink);
-  font:16px/1.45 -apple-system,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;
-  padding:calc(env(safe-area-inset-top) + 22px) 18px calc(env(safe-area-inset-bottom) + 96px)}
-h1,h2,.tk-name,.tk-when{font-family:"Bricolage Grotesque",-apple-system,system-ui,sans-serif}
-h1{font-size:36px;line-height:1.02;letter-spacing:-.02em;font-weight:800;margin:0 0 6px}
-h2{font-size:21px;font-weight:700;margin:30px 0 10px}
-.sub{color:var(--soft);margin:0 0 18px}
-label{display:block;font-size:14px;color:var(--soft);margin:12px 0 5px}
+  font:17px/1.35 -apple-system,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;
+  padding:calc(env(safe-area-inset-top) + 26px) 16px calc(env(safe-area-inset-bottom) + 120px)}
+h1{font-size:34px;font-weight:700;letter-spacing:.01em;margin:0 4px 2px}
+h2{font-size:20px;font-weight:700;margin:30px 4px 10px}
+.sub{color:var(--soft);font-size:15px;margin:0 4px 18px}
+.foot{color:var(--soft);font-size:13px;margin:8px 16px 0}
 input,textarea,button{font:inherit;color:inherit}
-input,textarea{width:100%;min-height:50px;padding:13px 14px;border:1.5px solid var(--line);
-  border-radius:12px;background:var(--card);-webkit-appearance:none;appearance:none}
-textarea{min-height:190px;resize:vertical}
-input:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:3px solid rgba(214,58,114,.4);outline-offset:1px}
-.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
-button{cursor:pointer;border:0;background:none}
-.btn{width:100%;min-height:52px;border-radius:14px;background:var(--ink);color:#fff;font-weight:600;margin-top:12px}
-.btn.rose{background:var(--rose)}
-.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
-.btn.small{width:auto;min-height:40px;padding:0 14px;margin:0;font-size:15px}
-.chips{display:flex;gap:8px;overflow-x:auto;margin:0 -18px 12px;padding:2px 18px;scrollbar-width:none}
+button{cursor:pointer;border:0;background:none;padding:0}
+button:active,a.btn:active{opacity:.6}
+button:focus-visible,a:focus-visible{outline:3px solid var(--tint);outline-offset:2px}
+
+.box{display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:12px;padding:0 12px;min-height:46px;margin-top:8px}
+.box svg{flex:none;width:18px;height:18px;stroke:var(--soft);fill:none;stroke-width:2;stroke-linecap:round}
+.box input{flex:1;min-width:0;border:0;background:none;outline:0;padding:11px 0}
+.box:focus-within{box-shadow:0 0 0 2px var(--tint)}
+.link{color:var(--tint);font-weight:600;font-size:16px;white-space:nowrap;padding:8px 0}
+
+.chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:9px 15px;border-radius:99px;background:var(--card);border:1.5px solid var(--line);font-size:15px}
-.chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
-.status{color:var(--soft);font-size:15px;margin:12px 2px}
-.res{display:block;width:100%;text-align:left;background:var(--card);border-radius:14px;padding:13px 15px;margin-top:8px}
-.res b{display:block;font-size:17px}
-.res span{color:var(--soft);font-size:14px}
-details{margin-top:16px}
-summary{color:var(--rose);font-weight:600;padding:6px 0}
-.ticket{--cut:calc(100% - 66px);background:var(--gold);border-radius:18px;padding:20px 22px 0;margin-top:16px;
-  -webkit-mask:radial-gradient(circle 11px at 0 var(--cut),#0000 97%,#000) left/51% 100% no-repeat,
-               radial-gradient(circle 11px at 100% var(--cut),#0000 97%,#000) right/51% 100% no-repeat;
-          mask:radial-gradient(circle 11px at 0 var(--cut),#0000 97%,#000) left/51% 100% no-repeat,
-               radial-gradient(circle 11px at 100% var(--cut),#0000 97%,#000) right/51% 100% no-repeat}
-.tk-name{font-size:27px;line-height:1.08;font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
-.tk-meta{font-size:15px;margin:0 0 4px;opacity:.8}
-.ticket a{color:var(--ink);font-size:15px;font-weight:600}
-.tk-stub{height:66px;margin:16px -22px 0;padding:0 22px;border-top:2px dashed rgba(43,27,61,.4);
-  display:flex;align-items:center;justify-content:space-between;gap:10px}
-.tk-when{font-weight:700;font-size:17px}
-.tk-two{font-size:14px;opacity:.75;white-space:nowrap}
-.nudge{background:var(--rose);color:#fff;border-radius:16px;padding:15px 16px;margin-bottom:20px}
-.nudge .btn{background:#fff;color:var(--rose);margin-top:10px}
-.plan{background:var(--card);border-radius:14px;padding:14px 15px;margin-top:10px}
-.plan b{font-size:17px}
-.plan p{margin:2px 0 10px;color:var(--soft);font-size:14px}
-.plan .row{gap:8px}
-.plan .btn.small{flex:none}
-.tip{font-size:14px;color:var(--soft);margin-top:12px}
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(255,255,255,.92);
-  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);
-  padding:8px 12px calc(env(safe-area-inset-bottom) + 8px)}
-nav button{flex:1;min-height:46px;border-radius:12px;color:var(--soft);font-weight:600}
-nav button[aria-current=page]{color:var(--ink);background:var(--bg)}
-#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 86px);transform:translateX(-50%);
-  background:var(--ink);color:#fff;padding:11px 18px;border-radius:99px;font-size:15px;max-width:88%;text-align:center}
+.chip{flex:none;padding:8px 15px;border-radius:99px;background:var(--card);font-size:15px;font-weight:500}
+.chip[aria-pressed=true]{background:var(--tint);color:#fff}
+
+.btn{display:block;width:100%;min-height:50px;line-height:50px;border-radius:14px;background:var(--tint);color:#fff;
+  font-weight:600;text-align:center;text-decoration:none;margin-top:12px}
+.btn.gray{background:var(--fill);color:var(--tint)}
+.btn.small{display:inline-block;width:auto;min-height:36px;line-height:36px;padding:0 16px;border-radius:99px;font-size:15px;margin:0}
+
+.status{color:var(--soft);font-size:15px;margin:14px 4px 4px}
+.res{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--card);border-radius:16px;padding:10px;margin-top:8px}
+.res img{flex:none;width:78px;height:78px;border-radius:11px;object-fit:cover;background:var(--fill)}
+.info{display:block;min-width:0;padding:2px 4px}
+.info b{display:block;font-weight:600;line-height:1.2;margin-bottom:3px}
+.m{display:block;font-size:14px;color:var(--soft);line-height:1.35}
+.rate{color:#ff9500;font-weight:600}
+
+.group{background:var(--card);border-radius:14px;overflow:hidden}
+.field{display:flex;align-items:center;gap:12px;padding:0 16px;min-height:50px;position:relative}
+.field+.field::before{content:"";position:absolute;left:16px;right:0;top:0;border-top:.5px solid var(--line)}
+.field label{flex:none;width:98px}
+.field input{flex:1;min-width:0;border:0;background:none;outline:0;padding:14px 0}
+.field input[type=date],.field input[type=time]{flex:none;margin-left:auto;color:var(--tint)}
+.field:focus-within label{color:var(--tint)}
+textarea{display:block;width:100%;min-height:200px;border:0;outline:0;background:var(--card);border-radius:14px;padding:14px 16px;resize:vertical}
+textarea:focus{box-shadow:0 0 0 2px var(--tint)}
+details{margin-top:14px}
+summary{color:var(--tint);font-weight:600;font-size:16px;padding:6px 4px 10px;list-style:none}
+summary::-webkit-details-marker{display:none}
+
+.pass{background:var(--card);border-radius:22px;overflow:hidden;margin-top:18px;box-shadow:0 10px 30px rgba(0,0,0,.14)}
+.pass img{display:block;width:100%;height:180px;object-fit:cover;background:var(--fill)}
+.pass-body{padding:16px 18px 14px}
+.pass-name{font-size:24px;font-weight:700;line-height:1.15;margin:0 0 6px}
+.pass-when{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border-top:.5px solid var(--line);font-weight:600}
+.pass-when a{color:var(--tint);text-decoration:none;white-space:nowrap}
+
+.nudge{background:var(--tint);color:#fff;border-radius:18px;padding:16px;margin-bottom:22px;font-weight:500}
+.nudge .btn{background:#fff;color:var(--tint)}
+.plan{background:var(--card);border-radius:16px;padding:14px 16px;margin-top:10px}
+.plan b{font-weight:600}
+.plan p{margin:2px 0 12px;color:var(--soft);font-size:14px}
+.plan div{display:flex;gap:8px}
+
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 12px);display:flex;gap:4px;padding:5px;
+  border-radius:99px;background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+  box-shadow:0 8px 28px rgba(0,0,0,.16),inset 0 0 0 .5px var(--line)}
+nav button{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:86px;padding:7px 10px 6px;border-radius:99px;
+  font-size:11px;font-weight:600;color:var(--soft)}
+nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+nav button[aria-current=page]{color:var(--tint);background:var(--fill)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 100px);background:var(--glass);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 6px 22px rgba(0,0,0,.18);
+  padding:11px 18px;border-radius:99px;font-size:15px;font-weight:500;max-width:88%;text-align:center}
 </style>
 </head>
 <body>
 
 <main id="v-plan">
   <div id="nudge" class="nudge" hidden></div>
-  <h1>Plan date night</h1>
+  <h1>Date Night</h1>
   <p class="sub">Find a spot, set the time, text her the plan.</p>
 
   <div class="chips" id="chips"></div>
-  <label for="q">What do you feel like?</label>
-  <input id="q" placeholder="Italian, rooftop, mini golf" enterkeyhint="search">
-  <label for="area">Where?</label>
-  <div class="row">
-    <input id="area" placeholder="Suburb or city" enterkeyhint="search">
-    <button class="btn ghost small" id="nearme" style="flex:none;min-height:50px">Near me</button>
+  <div class="box">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <input id="q" placeholder="Italian, rooftop, mini golf" aria-label="What do you feel like?" enterkeyhint="search">
   </div>
-  <button class="btn" id="go">Search places</button>
+  <div class="box">
+    <svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+    <input id="area" placeholder="Suburb or city" aria-label="Where?" enterkeyhint="search">
+    <button class="link" id="nearme">Near me</button>
+  </div>
+  <button class="btn" id="go">Search</button>
   <p class="status" id="status" aria-live="polite"></p>
   <div id="list"></div>
 
   <details>
     <summary>Can't find it? Add the place yourself</summary>
-    <label for="mname">Place name</label><input id="mname">
-    <label for="maddr">Address</label><input id="maddr">
-    <button class="btn ghost" id="madd">Use this place</button>
+    <div class="group">
+      <div class="field"><label for="mname">Name</label><input id="mname" placeholder="Place name"></div>
+      <div class="field"><label for="maddr">Address</label><input id="maddr" placeholder="Street and suburb"></div>
+    </div>
+    <button class="btn gray" id="madd">Use this place</button>
   </details>
 
   <section id="step2" hidden>
-    <h2>When?</h2>
-    <div class="row">
-      <div><label for="date">Day</label><input type="date" id="date"></div>
-      <div><label for="time">Time</label><input type="time" id="time" value="18:30"></div>
-    </div>
-    <label for="note">Anything she should know? (optional)</label>
-    <input id="note" placeholder="Dress nice, bring a jacket">
+    <div class="pass" id="pass"></div>
 
-    <div class="ticket" id="ticket"></div>
+    <div id="movieGroup" hidden>
+      <h2>The movie</h2>
+      <div class="group">
+        <div class="field"><label for="movie">Movie</label><input id="movie" placeholder="What are you seeing?"></div>
+      </div>
+      <a class="btn gray" id="sessions" target="_blank" rel="noopener">See session times</a>
+      <p class="foot">Opens the cinema's site. Pick a session, then set that time below.</p>
+    </div>
+
+    <h2>When</h2>
+    <div class="group">
+      <div class="field"><label for="date">Day</label><input type="date" id="date"></div>
+      <div class="field"><label for="time">Time</label><input type="time" id="time" value="18:30"></div>
+      <div class="field"><label for="note">Note</label><input id="note" placeholder="Dress nice, bring a jacket"></div>
+    </div>
 
     <h2>Your message</h2>
     <textarea id="msg" aria-label="Message to send"></textarea>
-    <button class="btn rose" id="sendnow">Text it to her now</button>
-    <button class="btn ghost" id="savelater">Save and send later</button>
-    <p class="tip">To schedule it for Wednesday: tap "Text it to her now", then in Messages tap the + next to the text box and choose Send Later.</p>
+    <button class="btn" id="sendnow">Text it to her now</button>
+    <button class="btn gray" id="savelater">Save and send later</button>
+    <p class="foot">To schedule it for Wednesday, tap "Text it to her now", then in Messages tap the + next to the text box and choose Send Later.</p>
   </section>
 </main>
 
 <main id="v-dates" hidden>
-  <h1>Your dates</h1>
+  <h1>Your Dates</h1>
   <p class="sub">Plans you've saved or sent.</p>
   <div id="plans"></div>
 </main>
 
 <main id="v-settings" hidden>
   <h1>Settings</h1>
-  <p class="sub">Saved on this phone only.</p>
-  <label for="s-her">Her name</label><input id="s-her" autocomplete="off">
-  <label for="s-phone">Her mobile number</label><input id="s-phone" type="tel" placeholder="0412 345 678">
-  <label for="s-area">Where you usually go out</label><input id="s-area" placeholder="New Farm, Brisbane">
+  <p class="sub">Everything here stays on this phone.</p>
+  <div class="group">
+    <div class="field"><label for="s-her">Her name</label><input id="s-her" autocomplete="off"></div>
+    <div class="field"><label for="s-phone">Her mobile</label><input id="s-phone" type="tel" placeholder="0412 345 678"></div>
+    <div class="field"><label for="s-area">Usual area</label><input id="s-area" placeholder="New Farm, Brisbane"></div>
+  </div>
+  <h2>Photos and ratings</h2>
+  <div class="group">
+    <div class="field"><label for="s-key">Google key</label><input id="s-key" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Optional"></div>
+  </div>
+  <p class="foot">Paste a Google Places key to get photos, ratings and prices. Leave it empty to search without them.</p>
   <button class="btn" id="s-save">Save settings</button>
 </main>
 
 <nav>
-  <button data-tab="plan" aria-current="page">Plan</button>
-  <button data-tab="dates">Dates</button>
-  <button data-tab="settings">Settings</button>
+  <button data-tab="plan" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.500A4 4 0 0 1 19 10c0 5.600-7 10-7 10z"/></svg>Plan</button>
+  <button data-tab="dates"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M8 3v4M16 3v4"/></svg>Dates</button>
+  <button data-tab="settings"><svg viewBox="0 0 24 24"><path d="M4 7h8M18 7h2M4 17h2M12 17h8"/><circle cx="15" cy="7" r="2.500"/><circle cx="9" cy="17" r="2.500"/></svg>Settings</button>
 </nav>
 <div id="toast" hidden></div>
 
@@ -144,22 +183,25 @@ const $=s=>document.querySelector(s), enc=encodeURIComponent;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
 const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const cap=s=>s?s[0].toUpperCase()+s.slice(1):'';
 
-let settings=load('dn_settings',{her:'',phone:'',area:''});
+let settings=Object.assign({her:'',phone:'',area:'',key:''},load('dn_settings',{}));
 let plans=load('dn_plans',[]);
 let picked=null, cat='', results=[];
 const centers={};
 
+/* each category: [words for Google, filters for OpenStreetMap] */
 const CATS={
-  Dinner:['["amenity"="restaurant"]'],
-  Drinks:['["amenity"~"^(bar|pub|biergarten)$"]'],
-  Coffee:['["amenity"="cafe"]'],
-  Dessert:['["amenity"="ice_cream"]','["cuisine"~"dessert|ice_cream|cake|donut|chocolate",i]'],
-  Movies:['["amenity"="cinema"]'],
-  Fun:['["leisure"~"^(bowling_alley|miniature_golf|escape_game|amusement_arcade|trampoline_park|ice_rink)$"]',
-       '["tourism"~"^(museum|gallery|zoo|aquarium|theme_park)$"]','["amenity"~"^(theatre|arts_centre)$"]'],
-  Outdoors:['["leisure"~"^(park|garden|nature_reserve)$"]','["tourism"~"^(viewpoint|picnic_site)$"]','["natural"="beach"]']
+  Dinner:['restaurant',['["amenity"="restaurant"]']],
+  Drinks:['bar',['["amenity"~"^(bar|pub|biergarten)$"]']],
+  Coffee:['cafe',['["amenity"="cafe"]']],
+  Dessert:['dessert',['["amenity"="ice_cream"]','["cuisine"~"dessert|ice_cream|cake|donut|chocolate",i]']],
+  Movies:['cinema',['["amenity"="cinema"]']],
+  Fun:['fun things to do',['["leisure"~"^(bowling_alley|miniature_golf|escape_game|amusement_arcade|trampoline_park|ice_rink)$"]',
+       '["tourism"~"^(museum|gallery|zoo|aquarium|theme_park)$"]','["amenity"~"^(theatre|arts_centre)$"]']],
+  Outdoors:['parks and lookouts',['["leisure"~"^(park|garden|nature_reserve)$"]','["tourism"~"^(viewpoint|picnic_site)$"]','["natural"="beach"]']]
 };
+const PRICE={PRICE_LEVEL_INEXPENSIVE:'$',PRICE_LEVEL_MODERATE:'$$',PRICE_LEVEL_EXPENSIVE:'$$$',PRICE_LEVEL_VERY_EXPENSIVE:'$$$$'};
 
 /* ---------- small helpers ---------- */
 let toastTimer;
@@ -179,6 +221,15 @@ function mapLink(p){return p.lat?`https://maps.apple.com/?q=${enc(p.name)}&ll=${
 function fmtDay(d){return d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'})}
 function fmtTime(d){return d.toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit',hour12:true}).replace(':00','').replace(/\s/g,'')}
 function when(){const d=new Date($('#date').value+'T'+($('#time').value||'18:30'));return isNaN(d)?null:d}
+function isCinema(p){return cat==='Movies'||/cinema|movie/i.test(p.kind||'')}
+function metaHTML(p){
+  const a=[];
+  if(p.rating) a.push(`<span class="rate">★ ${p.rating.toFixed(1)}</span>${p.count?' ('+p.count.toLocaleString()+')':''}`);
+  if(p.price) a.push(esc(p.price));
+  if(p.kind) a.push(esc(cap(p.kind)));
+  const b=[p.address,p.km!=null?p.km.toFixed(1)+' km':'',p.open===true?'Open now':p.open===false?'Closed now':''].filter(Boolean).map(esc);
+  return (a.length?`<span class="m">${a.join(' · ')}</span>`:'')+(b.length?`<span class="m">${b.join(' · ')}</span>`:'');
+}
 
 /* ---------- search ---------- */
 async function getCenter(){
@@ -191,53 +242,87 @@ async function getCenter(){
   return centers[area]={lat:+j[0].lat,lon:+j[0].lon};
 }
 
+async function searchGoogle(c,raw){
+  const area=$('#area').value.trim();
+  const text=[raw,cat?CATS[cat][0]:''].filter(Boolean).join(' ')+(area&&area!=='Near me'?' in '+area:'');
+  const r=await fetch('https://places.googleapis.com/v1/places:searchText',{method:'POST',
+    headers:{'Content-Type':'application/json','X-Goog-Api-Key':settings.key,
+      'X-Goog-FieldMask':'places.displayName,places.shortFormattedAddress,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.priceLevel,places.photos,places.primaryTypeDisplayName,places.websiteUri,places.currentOpeningHours.openNow'},
+    body:JSON.stringify({textQuery:text,pageSize:8,locationBias:{circle:{center:{latitude:c.lat,longitude:c.lon},radius:6000}}})});
+  const j=await r.json();
+  if(!r.ok) throw new Error('Google key problem: '+(j.error?.message||'request refused')+' Check the key in Settings.');
+  return (j.places||[]).map(p=>{
+    const lat=p.location?.latitude, lon=p.location?.longitude;
+    return {name:p.displayName?.text||'Unnamed place', address:p.shortFormattedAddress||p.formattedAddress||'',
+      kind:p.primaryTypeDisplayName?.text||'', lat, lon, km:lat?km(c,{lat,lon}):null,
+      rating:p.rating, count:p.userRatingCount, price:PRICE[p.priceLevel]||'', open:p.currentOpeningHours?.openNow,
+      website:p.websiteUri||'',
+      photo:p.photos?.[0]?`https://places.googleapis.com/v1/${p.photos[0].name}/media?maxWidthPx=600&key=${enc(settings.key)}`:''};
+  });
+}
+
+async function searchOSM(c,raw){
+  const kw=raw.replace(/["\\\[\]()]/g,'').replace(/\s+/g,'.*'), a=`(around:4000,${c.lat},${c.lon})`;
+  const body=cat
+    ? CATS[cat][1].map(f=>`nwr${a}["name"]${f}${kw?`[~"^(name|cuisine)$"~"${kw}",i]`:''};`).join('')
+    : `nwr${a}["name"][~"^(amenity|leisure|tourism)$"~"."][~"^(name|cuisine|amenity|leisure|tourism|sport)$"~"${kw}",i];`;
+  const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',
+    body:new URLSearchParams({data:`[out:json][timeout:25];(${body});out center 250;`})});
+  if(!r.ok) throw new Error('The search service is busy. Try again in a moment.');
+  const j=await r.json(), seen=new Set();
+  return j.elements.map(e=>{
+    const t=e.tags||{}, lat=e.lat??e.center?.lat, lon=e.lon??e.center?.lon;
+    return {name:t.name, lat, lon, website:t.website||t['contact:website']||'',
+      kind:(t.cuisine||t.amenity||t.leisure||t.tourism||'').split(';')[0].replace(/_/g,' '),
+      address:[[t['addr:housenumber'],t['addr:street']].filter(Boolean).join(' '),t['addr:suburb']||t['addr:city']].filter(Boolean).join(', '),
+      km:lat?km(c,{lat,lon}):99};
+  }).filter(p=>p.lat).sort((x,y)=>x.km-y.km).filter(p=>{
+    const k=p.name+p.km.toFixed(1); if(seen.has(k)) return false; seen.add(k); return true;
+  }).slice(0,25);
+}
+
 async function search(){
-  const kw=$('#q').value.trim().replace(/["\\\[\]()]/g,'').replace(/\s+/g,'.*');
-  if(!kw&&!cat){status('Pick a category or type what you feel like.');return}
+  const raw=$('#q').value.trim();
+  if(!raw&&!cat){status('Pick a category or type what you feel like.');return}
   $('#list').innerHTML='';status('Searching…');
   try{
-    const c=await getCenter(), a=`(around:4000,${c.lat},${c.lon})`;
-    const body=cat
-      ? CATS[cat].map(f=>`nwr${a}["name"]${f}${kw?`[~"^(name|cuisine)$"~"${kw}",i]`:''};`).join('')
-      : `nwr${a}["name"][~"^(amenity|leisure|tourism)$"~"."][~"^(name|cuisine|amenity|leisure|tourism|sport)$"~"${kw}",i];`;
-    const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',
-      body:new URLSearchParams({data:`[out:json][timeout:25];(${body});out center 250;`})});
-    if(!r.ok) throw new Error('The search service is busy. Try again in a moment.');
-    const j=await r.json(), seen=new Set();
-    results=j.elements.map(e=>{
-      const t=e.tags||{}, lat=e.lat??e.center?.lat, lon=e.lon??e.center?.lon;
-      return {name:t.name, lat, lon,
-        kind:(t.cuisine||t.amenity||t.leisure||t.tourism||'').split(';')[0].replace(/_/g,' '),
-        address:[[t['addr:housenumber'],t['addr:street']].filter(Boolean).join(' '),t['addr:suburb']||t['addr:city']].filter(Boolean).join(', '),
-        km:lat?km(c,{lat,lon}):99};
-    }).filter(p=>p.lat).sort((x,y)=>x.km-y.km).filter(p=>{
-      const k=p.name+p.km.toFixed(1); if(seen.has(k)) return false; seen.add(k); return true;
-    }).slice(0,25);
+    const c=await getCenter();
+    results=settings.key?await searchGoogle(c,raw):await searchOSM(c,raw);
     if(!results.length){status('Nothing found. Try a different word, a nearby suburb, or add the place yourself below.');return}
-    status(`${results.length} places, closest first. Tap one to pick it.`);
-    $('#list').innerHTML=results.map((p,i)=>`<button class="res" data-i="${i}"><b>${esc(p.name)}</b>
-      <span>${esc([p.kind,p.address,p.km.toFixed(1)+' km'].filter(Boolean).join(', '))}</span></button>`).join('');
+    status(`${results.length} places. Tap one to pick it.`);
+    $('#list').innerHTML=results.map((p,i)=>`<button class="res" data-i="${i}">
+      ${p.photo?`<img src="${esc(p.photo)}" alt="" loading="lazy">`:''}
+      <span class="info"><b>${esc(p.name)}</b>${metaHTML(p)}</span></button>`).join('')
+      +`<p class="foot">Results from ${settings.key?'Google':'OpenStreetMap'}</p>`;
   }catch(e){status(e.message||'Search failed. Check your connection and try again.')}
 }
 
+/* ---------- picked place + message ---------- */
 function pick(p){
-  picked=p; $('#step2').hidden=false; draft();
+  picked=p;
+  $('#pass').innerHTML=`${p.photo?`<img src="${esc(p.photo)}" alt="">`:''}
+    <div class="pass-body"><p class="pass-name">${esc(p.name)}</p>${metaHTML(p)}</div>
+    <div class="pass-when"><span id="passwhen"></span><a href="${esc(mapLink(p))}" target="_blank" rel="noopener">Open in Maps</a></div>`;
+  const cinema=isCinema(p);
+  $('#movieGroup').hidden=!cinema;
+  if(cinema) $('#sessions').href=p.website||`https://www.google.com/search?q=${enc(p.name+' session times')}`;
+  else $('#movie').value='';
+  $('#step2').hidden=false; draft();
   $('#step2').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-/* ---------- ticket + message ---------- */
 function draft(){
-  const d=when(); if(!picked) return;
-  const tk=$('#ticket');
-  tk.innerHTML=`<p class="tk-name">${esc(picked.name)}</p>
-    ${picked.address?`<p class="tk-meta">${esc(picked.address)}</p>`:''}
-    <a href="${esc(mapLink(picked))}" target="_blank" rel="noopener">Check it in Maps</a>
-    <div class="tk-stub"><span class="tk-when">${d?esc(fmtDay(d)+', '+fmtTime(d)):'Pick a day and time'}</span><span class="tk-two">Admit two</span></div>`;
+  if(!picked) return;
+  const d=when();
+  $('#passwhen').textContent=d?fmtDay(d)+', '+fmtTime(d):'Pick a day and time';
   if(!d) return;
-  const lines=[(settings.her?`Hey ${settings.her}, date`:'Date')+' night is sorted ✨','',picked.name,`${fmtDay(d)} at ${fmtTime(d)}`];
+  const movie=$('#movie').value.trim(), n=$('#note').value.trim();
+  const lines=[(settings.her?`Hey ${settings.her}, date`:'Date')+' night is sorted ✨','',picked.name];
+  if(movie) lines.push('Movie: '+movie);
+  lines.push(`${fmtDay(d)} at ${fmtTime(d)}`);
   if(picked.address) lines.push(picked.address);
   lines.push(mapLink(picked));
-  const n=$('#note').value.trim(); if(n) lines.push('',n);
+  if(n) lines.push('',n);
   $('#msg').value=lines.join('\n');
 }
 
@@ -263,9 +348,9 @@ function renderPlans(){
   const sorted=[...plans].sort((a,b)=>new Date(b.when)-new Date(a.when));
   el.innerHTML=sorted.map(p=>{const d=new Date(p.when), past=d<now;
     return `<div class="plan"><b>${esc(p.name)}</b>
-      <p>${esc(fmtDay(d)+', '+fmtTime(d))}. ${past?'Been and gone':p.sent?'Sent to her':'Not sent yet'}.</p>
-      <div class="row">${past?'':`<button class="btn small ${p.sent?'ghost':'rose'}" data-send="${p.id}">${p.sent?'Send again':'Text it to her'}</button>`}
-      <button class="btn small ghost" data-del="${p.id}">Delete</button></div></div>`}).join('');
+      <p>${esc(fmtDay(d)+', '+fmtTime(d))} · ${past?'Been and gone':p.sent?'Sent to her':'Not sent yet'}</p>
+      <div>${past?'':`<button class="btn small ${p.sent?'gray':''}" data-send="${p.id}">${p.sent?'Send again':'Text it to her'}</button>`}
+      <button class="btn small gray" data-del="${p.id}">Delete</button></div></div>`}).join('');
 }
 
 function renderNudge(){
@@ -282,7 +367,7 @@ $('#chips').innerHTML=Object.keys(CATS).map(c=>`<button class="chip" aria-presse
 $('#chips').onclick=e=>{const b=e.target.closest('.chip'); if(!b) return;
   cat=cat===b.textContent?'':b.textContent;
   document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x.textContent===cat));
-  if($('#area').value.trim()) search();};
+  if(cat&&$('#area').value.trim()) search();};
 $('#go').onclick=search;
 for(const id of ['#q','#area']) $(id).onkeydown=e=>{if(e.key==='Enter'){e.target.blur();search()}};
 $('#nearme').onclick=()=>{
@@ -297,7 +382,7 @@ $('#list').onclick=e=>{const b=e.target.closest('.res'); if(b) pick(results[+b.d
 $('#madd').onclick=()=>{const name=$('#mname').value.trim();
   if(!name){toast('Type the place name.');return}
   pick({name,address:$('#maddr').value.trim(),kind:''})};
-for(const id of ['#date','#time','#note']) $(id).oninput=draft;
+for(const id of ['#date','#time','#note','#movie']) $(id).oninput=draft;
 $('#sendnow').onclick=()=>{const p=makePlan(); if(p) sendPlan(p)};
 $('#savelater').onclick=()=>{if(makePlan()){toast('Saved. Open the app when you want to send it.');show('dates')}};
 document.body.addEventListener('click',e=>{
@@ -307,19 +392,20 @@ document.body.addEventListener('click',e=>{
   if(t) show(t.dataset.tab);
 });
 $('#s-save').onclick=()=>{
-  settings={her:$('#s-her').value.trim(),phone:$('#s-phone').value.trim(),area:$('#s-area').value.trim()};
+  settings={her:$('#s-her').value.trim(),phone:$('#s-phone').value.trim(),area:$('#s-area').value.trim(),key:$('#s-key').value.trim()};
   save('dn_settings',settings); if(!$('#area').value) $('#area').value=settings.area;
   draft(); toast('Settings saved'); show('plan');
 };
 
 /* ---------- start-up ---------- */
-$('#s-her').value=settings.her; $('#s-phone').value=settings.phone; $('#s-area').value=settings.area;
+$('#s-her').value=settings.her; $('#s-phone').value=settings.phone; $('#s-area').value=settings.area; $('#s-key').value=settings.key;
 $('#area').value=settings.area;
 {const d=new Date(); d.setDate(d.getDate()+((7-d.getDay())%7||7));           // next Sunday
  $('#date').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 {const c=document.createElement('canvas'); c.width=c.height=180; const x=c.getContext('2d');   // home screen icon
- x.fillStyle='#f6c453'; x.fillRect(0,0,180,180); x.fillStyle='#d63a72'; x.font='120px serif';
- x.textAlign='center'; x.textBaseline='middle'; x.fillText('♥',90,100);
+ const g=x.createLinearGradient(0,0,0,180); g.addColorStop(0,'#ff5e7e'); g.addColorStop(1,'#ff2d55');
+ x.fillStyle=g; x.fillRect(0,0,180,180); x.fillStyle='#fff'; x.font='110px serif';
+ x.textAlign='center'; x.textBaseline='middle'; x.fillText('♥',90,98);
  const l=document.createElement('link'); l.rel='apple-touch-icon'; l.href=c.toDataURL(); document.head.appendChild(l)}
 renderNudge();
 if(!settings.phone) show('settings');
